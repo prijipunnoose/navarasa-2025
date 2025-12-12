@@ -398,41 +398,68 @@
 
     // ==================== LEADERBOARDS ====================
     function computeScores() {
-      const perStudent = {};
-      for (const r of state.results) {
-        if (!perStudent[r.participant_id]) perStudent[r.participant_id] = 0;
-        perStudent[r.participant_id] += (r.points || 0);
-      }
-      // Get all students with scores (including those without gender for team calculations)
-      const allStudents = Object.keys(perStudent).map(pid => {
-        const p = state.participants.find(x => x.id === pid) || {name:'Unknown', team:'Unknown', chest_no:'000', gender:null};
-        return {
-          participant_id: pid,
-          name: p.name,
-          team: p.team,
-          chest_no: p.chest_no,
-          gender: p.gender || null,
-          points: perStudent[pid]
-        };
-      });
-      
-      // Filter students for Individual Leaderboard (only Male or Female)
-      const students = allStudents
-        .filter(s => s.gender === 'Male' || s.gender === 'Female')
-        .sort((a, b) => b.points - a.points);
-      
-      // Separate by gender
-      const maleStudents = students.filter(s => s.gender === 'Male').sort((a, b) => b.points - a.points);
-      const femaleStudents = students.filter(s => s.gender === 'Female').sort((a, b) => b.points - a.points);
-      
-      // Calculate team scores from ALL students (regardless of gender)
-      const teams = {};
-      for (const s of allStudents) {
-        teams[s.team] = (teams[s.team] || 0) + s.points;
-      }
-      const teamArr = Object.keys(teams).map(t => ({team:t, points:teams[t]})).sort((a, b) => b.points - a.points);
-      return {students, teams:teamArr, maleStudents, femaleStudents};
+  const individualPoints = {};
+  const groupPoints = {};
+
+  // Build separate point tables
+  for (const r of state.results) {
+
+    const ev = EVENTS.find(e => e.id === r.event_id);
+
+    // IMPORTANT FIX
+    const isGroup = ev?.isGroup === true;
+
+    if (isGroup) {
+      if (!groupPoints[r.participant_id]) groupPoints[r.participant_id] = 0;
+      groupPoints[r.participant_id] += (r.points || 0);
+    } else {
+      if (!individualPoints[r.participant_id]) individualPoints[r.participant_id] = 0;
+      individualPoints[r.participant_id] += (r.points || 0);
     }
+  }
+
+  // Merge student info
+  const allStudents = state.participants.map(p => ({
+    participant_id: p.id,
+    name: p.name,
+    team: p.team,
+    chest_no: p.chest_no,
+    gender: p.gender,
+    individual: individualPoints[p.id] || 0,
+    group: groupPoints[p.id] || 0,
+    total: (individualPoints[p.id] || 0) + (groupPoints[p.id] || 0)
+  }));
+
+  // Individual leaderboard
+  const students = allStudents
+    .filter(s => s.individual > 0)
+    .sort((a, b) => b.individual - a.individual);
+
+  // Male leaderboard
+  const maleStudents = allStudents
+    .filter(s => s.gender === 'male' && s.individual > 0)
+    .sort((a, b) => b.individual - a.individual);
+
+  // Female leaderboard
+  const femaleStudents = allStudents
+    .filter(s => s.gender === 'female' && s.individual > 0)
+    .sort((a, b) => b.individual - a.individual);
+
+  // Team scores (individual + group)
+  const teamMap = {};
+  for (const s of allStudents) {
+    if (!teamMap[s.team]) teamMap[s.team] = 0;
+    teamMap[s.team] += s.total;
+  }
+
+  const teams = Object.keys(teamMap).map(team => ({
+    team,
+    points: teamMap[team]
+  })).sort((a, b) => b.points - a.points);
+
+  return {students, maleStudents, femaleStudents, teams};
+}
+
 
     function exportLeaderboardXls() {
       const {students, teams} = computeScores();
