@@ -1,705 +1,950 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cultural Competition Manager</title>
-  <style>
-    :root{--bg:#0f1724;--card:#0b1220;--muted:#93a3b8;--accent:#0ea5a4;--glass: rgba(255,255,255,0.03)}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color:#e6eef6;background:linear-gradient(180deg,#071026 0%, #071b2b 100%);min-height:100vh}
-    header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.03)}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#2563eb);display:flex;align-items:center;justify-content:center;font-weight:700;color:#022}
-    h1{font-size:16px;margin:0}
-    nav{display:flex;gap:8px}
-    .tab{padding:8px 12px;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;border:none;font-size:14px}
-    .tab.active{background:var(--glass);color:#fff}
-    main{padding:16px}
-    .container{max-width:1100px;margin:14px auto}
-    .grid{display:grid;grid-template-columns:1fr 340px;gap:16px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
-    input,select,textarea{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:rgba(11,18,32,0.8);color:#eaf2ff;font-size:14px}
-    select{background-color:#0b1220 !important;color:#eaf2ff !important;background-image:none}
-    select option{background-color:#0b1220 !important;color:#eaf2ff !important;padding:8px}
-    select[multiple]{min-height:120px}
-    select[multiple] option:checked{background-color:var(--accent) !important;color:#022 !important}
-    optgroup{color:var(--muted);font-weight:600;font-size:12px}
-    optgroup option{color:#eaf2ff;font-weight:400;padding-left:20px}
-    label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
-    .toast{position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid rgba(255,255,255,0.1);padding:12px 16px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;min-width:250px;animation:slideIn 0.3s ease-out}
-    .toast.success{border-left:4px solid #10b981}
-    .toast.error{border-left:4px solid #ef4444}
-    @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-    .row{display:flex;gap:8px}
-    .list{max-height:520px;overflow:auto;padding:6px}
-    .item{display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;margin-bottom:8px;background:rgba(255,255,255,0.01)}
-    .small{font-size:13px;color:var(--muted)}
-    button{background:var(--accent);border:none;color:#022;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500}
-    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.05);color:var(--muted)}
-    .danger{background:#ff6b6b;color:#111}
-    footer{padding:12px;text-align:center;color:var(--muted);font-size:12px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}.logo{width:38px;height:38px}.brand h1{display:none}.list{max-height:360px}}
-    .top-actions{display:flex;gap:8px;flex-wrap:wrap}
-    .muted{color:var(--muted)}
-    .badge{padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.02);font-size:12px}
-    .input-inline{display:flex;gap:8px}
-    .input-inline > *{flex:1}
-    .flex{display:flex;gap:8px;align-items:center}
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cultural Competition Manager</title>
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #93a3b8;
+            --accent: #0ea5a4;
+            --glass: rgba(255, 255, 255, 0.03)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+            color: #e6eef6;
+            background: linear-gradient(180deg, #071026 0%, #071b2b 100%);
+            min-height: 100vh
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03)
+        }
+
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent), #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #022
+        }
+
+        h1 {
+            font-size: 16px;
+            margin: 0
+        }
+
+        nav {
+            display: flex;
+            gap: 8px
+        }
+
+        .tab {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            border: none;
+            font-size: 14px
+        }
+
+        .tab.active {
+            background: var(--glass);
+            color: #fff
+        }
+
+        main {
+            padding: 16px
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 14px auto
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 16px
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(11, 18, 32, 0.8);
+            color: #eaf2ff;
+            font-size: 14px
+        }
+
+        select {
+            background-color: #0b1220 !important;
+            color: #eaf2ff !important;
+            background-image: none
+        }
+
+        select option {
+            background-color: #0b1220 !important;
+            color: #eaf2ff !important;
+            padding: 8px
+        }
+
+        select[multiple] {
+            min-height: 120px
+        }
+
+        select[multiple] option:checked {
+            background-color: var(--accent) !important;
+            color: #022 !important
+        }
+
+        optgroup {
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 12px
+        }
+
+        optgroup option {
+            color: #eaf2ff;
+            font-weight: 400;
+            padding-left: 20px
+        }
+
+        label {
+            font-size: 13px;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 4px
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            min-width: 250px;
+            animation: slideIn 0.3s ease-out
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1
+            }
+        }
+
+        .row {
+            display: flex;
+            gap: 8px
+        }
+
+        .list {
+            max-height: 520px;
+            overflow: auto;
+            padding: 6px
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.01)
+        }
+
+        .small {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        button {
+            background: var(--accent);
+            border: none;
+            color: #022;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500
+        }
+
+        .ghost {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--muted)
+        }
+
+        .danger {
+            background: #ff6b6b;
+            color: #111
+        }
+
+        footer {
+            padding: 12px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        @media (max-width:900px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            .logo {
+                width: 38px;
+                height: 38px
+            }
+
+            .brand h1 {
+                display: none
+            }
+
+            .list {
+                max-height: 360px
+            }
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 12px
+        }
+
+        .input-inline {
+            display: flex;
+            gap: 8px
+        }
+
+        .input-inline>* {
+            flex: 1
+        }
+
+        .flex {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <div class="brand">
-      <div class="logo">CC</div>
-      <div>
-        <h1>Cultural Competition Manager</h1>
-        <div class="small muted">Manage participants, results & leaderboards — Supabase enabled</div>
-      </div>
-    </div>
-    <nav id="tabs"></nav>
-  </header>
-  <main>
-    <div class="container">
-      <div id="app">Loading…</div>
-    </div>
-  </main>
-  <footer>Made for event organizers · Export as <code>.xls</code> available</footer>
+    <header>
+        <div class="brand">
+            <div class="logo">CC</div>
+            <div>
+                <h1>Cultural Competition Manager</h1>
+                <div class="small muted">Manage participants, results & leaderboards — Supabase enabled</div>
+            </div>
+        </div>
+        <nav id="tabs"></nav>
+    </header>
+    <main>
+        <div class="container">
+            <div id="app">Loading…</div>
+        </div>
+    </main>
+    <footer>Made for event organizers · Export as <code>.xls</code> available</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script>
-    // ==================== CONFIGURATION ====================
-    const CONFIG = {
-      SUPABASE_URL: 'https://izyykefdkqyfckpjpqkt.supabase.co',
-      SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6eXlrZWZka3F5ZmNrcGpwcWt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5MzY1NzYsImV4cCI6MjA4MDUxMjU3Nn0.8xnOa19yi5Fa2h0D3x8AZVrDcBiiUeiOGeueBjS1meg',
-      START_CHEST: 100,
-      USE_SUPABASE: true
-    };
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script>
+        // ==================== CONFIGURATION ====================
+        const CONFIG = {
+            SUPABASE_URL: 'https://izyykefdkqyfckpjpqkt.supabase.co',
+            SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6eXlrZWZka3F5ZmNrcGpwcWt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5MzY1NzYsImV4cCI6MjA4MDUxMjU3Nn0.8xnOa19yi5Fa2h0D3x8AZVrDcBiiUeiOGeueBjS1meg',
+            START_CHEST: 100,
+            USE_SUPABASE: true
+        };
 
-    // ==================== EVENTS DEFINITION ====================
-    const EVENTS = [
-      {id:'off_essay_mal', name:'Essay Writing (mal)', stage:'offstage', isGroup:false},
-      {id:'off_essay_eng', name:'Essay Writing (eng)', stage:'offstage', isGroup:false},
-      {id:'off_essay_hin', name:'Essay Writing (hin)', stage:'offstage', isGroup:false},
-      {id:'off_story_mal', name:'Short Story (mal)', stage:'offstage', isGroup:false},
-      {id:'off_story_eng', name:'Short Story (eng)', stage:'offstage', isGroup:false},
-      {id:'off_story_hin', name:'Short Story (hindi)', stage:'offstage', isGroup:false},
-      {id:'off_poem_mal', name:'Poem writing (mal)', stage:'offstage', isGroup:false},
-      {id:'off_poem_eng', name:'Poem writing (eng)', stage:'offstage', isGroup:false},
-      {id:'off_poem_hin', name:'Poem writing (hin)', stage:'offstage', isGroup:false},
-      {id:'off_eloc_mal', name:'Elocution (mal)', stage:'offstage', isGroup:false},
-      {id:'off_eloc_eng', name:'Elocution (eng)', stage:'offstage', isGroup:false},
-      {id:'off_eloc_hin', name:'Elocution (hin)', stage:'offstage', isGroup:false},
-      {id:'off_pencil', name:'Pencil drawing', stage:'offstage', isGroup:false},
-      {id:'off_cartoon', name:'Cartoon', stage:'offstage', isGroup:false},
-      {id:'off_watercolor', name:'Watercolor', stage:'offstage', isGroup:false},
-      {id:'off_collage', name:'Collage', stage:'offstage', isGroup:true},
-      {id:'off_mehandi', name:'Mehandi competition', stage:'offstage', isGroup:true},
-      {id:'off_photo', name:'Photography competition', stage:'offstage', isGroup:false},
-      {id:'off_reels', name:'Reels competition', stage:'offstage', isGroup:true},
-      {id:'on_rec_mal', name:'Recitation (mal)', stage:'onstage', isGroup:false},
-      {id:'on_rec_eng', name:'Recitation (eng)', stage:'onstage', isGroup:false},
-      {id:'on_rec_hin', name:'Recitation (hin)', stage:'onstage', isGroup:false},
-      {id:'on_grp_song', name:'Grp song', stage:'onstage', isGroup:true},
-      {id:'on_solo_song', name:'Solo song', stage:'onstage', isGroup:false},
-      {id:'on_vanchi', name:'Vanchipattu', stage:'onstage', isGroup:true},
-      {id:'on_solo_dance', name:'Solo dance', stage:'onstage', isGroup:false},
-      {id:'on_grp_dance', name:'Grp dance', stage:'onstage', isGroup:true},
-      {id:'on_mime', name:'Mime', stage:'onstage', isGroup:true},
-      {id:'on_nadanpattu', name:'Nadanpattu', stage:'onstage', isGroup:true},
-      {id:'on_fancy', name:'Fancy dress', stage:'onstage', isGroup:false},
-      {id:'on_spot_choreo', name:'Spot choreography', stage:'onstage', isGroup:false},
-      {id:'on_solo_cinematic', name:'Solo Dance cinematic', stage:'onstage', isGroup:false},
-      {id:'on_solo_classical', name:'Solo Dance classical', stage:'onstage', isGroup:false},
-      {id:'on_grp_cinematic', name:'Group Dance cinematic', stage:'onstage', isGroup:true},
-      {id:'on_grp_classical', name:'Group Dance classical', stage:'onstage', isGroup:true},
-      {id:'on_light_music', name:'Light Music', stage:'onstage', isGroup:false}
-    ];
+        // ==================== EVENTS DEFINITION ====================
+        const EVENTS = [
+            { id: 'off_essay_mal', name: 'Essay Writing (mal)', stage: 'offstage', isGroup: false },
+            { id: 'off_essay_eng', name: 'Essay Writing (eng)', stage: 'offstage', isGroup: false },
+            { id: 'off_essay_hin', name: 'Essay Writing (hin)', stage: 'offstage', isGroup: false },
+            { id: 'off_story_mal', name: 'Short Story (mal)', stage: 'offstage', isGroup: false },
+            { id: 'off_story_eng', name: 'Short Story (eng)', stage: 'offstage', isGroup: false },
+            { id: 'off_story_hin', name: 'Short Story (hindi)', stage: 'offstage', isGroup: false },
+            { id: 'off_poem_mal', name: 'Poem writing (mal)', stage: 'offstage', isGroup: false },
+            { id: 'off_poem_eng', name: 'Poem writing (eng)', stage: 'offstage', isGroup: false },
+            { id: 'off_poem_hin', name: 'Poem writing (hin)', stage: 'offstage', isGroup: false },
+            { id: 'off_eloc_mal', name: 'Elocution (mal)', stage: 'offstage', isGroup: false },
+            { id: 'off_eloc_eng', name: 'Elocution (eng)', stage: 'offstage', isGroup: false },
+            { id: 'off_eloc_hin', name: 'Elocution (hin)', stage: 'offstage', isGroup: false },
+            { id: 'off_pencil', name: 'Pencil drawing', stage: 'offstage', isGroup: false },
+            { id: 'off_cartoon', name: 'Cartoon', stage: 'offstage', isGroup: false },
+            { id: 'off_watercolor', name: 'Watercolor', stage: 'offstage', isGroup: false },
+            { id: 'off_collage', name: 'Collage', stage: 'offstage', isGroup: true },
+            { id: 'off_mehandi', name: 'Mehandi competition', stage: 'offstage', isGroup: true },
+            { id: 'off_photo', name: 'Photography competition', stage: 'offstage', isGroup: false },
+            { id: 'off_reels', name: 'Reels competition', stage: 'offstage', isGroup: true },
+            { id: 'on_rec_mal', name: 'Recitation (mal)', stage: 'onstage', isGroup: false },
+            { id: 'on_rec_eng', name: 'Recitation (eng)', stage: 'onstage', isGroup: false },
+            { id: 'on_rec_hin', name: 'Recitation (hin)', stage: 'onstage', isGroup: false },
+            { id: 'on_grp_song', name: 'Grp song', stage: 'onstage', isGroup: true },
+            { id: 'on_solo_song', name: 'Solo song', stage: 'onstage', isGroup: false },
+            { id: 'on_vanchi', name: 'Vanchipattu', stage: 'onstage', isGroup: true },
+            { id: 'on_solo_dance', name: 'Solo dance', stage: 'onstage', isGroup: false },
+            { id: 'on_grp_dance', name: 'Grp dance', stage: 'onstage', isGroup: true },
+            { id: 'on_mime', name: 'Mime', stage: 'onstage', isGroup: true },
+            { id: 'on_nadanpattu', name: 'Nadanpattu', stage: 'onstage', isGroup: true },
+            { id: 'on_fancy', name: 'Fancy dress', stage: 'onstage', isGroup: false },
+            { id: 'on_spot_choreo', name: 'Spot choreography', stage: 'onstage', isGroup: false },
+            { id: 'on_solo_cinematic', name: 'Solo Dance cinematic', stage: 'onstage', isGroup: false },
+            { id: 'on_solo_classical', name: 'Solo Dance classical', stage: 'onstage', isGroup: false },
+            { id: 'on_grp_cinematic', name: 'Group Dance cinematic', stage: 'onstage', isGroup: true },
+            { id: 'on_grp_classical', name: 'Group Dance classical', stage: 'onstage', isGroup: true },
+            { id: 'on_light_music', name: 'Light Music', stage: 'onstage', isGroup: false }
+        ];
 
-    // ==================== STATE ====================
-    const LS_KEYS = {PARTICIPANTS:'cc_participants_v1', RESULTS:'cc_results_v1', USER:'cc_user_v1'};
-    let supabase = null;
-    let state = {user:null, tab:'participants', participants:[], results:[], search:''};
-    let currentEventParticipants = []; // Store current event participants for export
+        // ==================== STATE ====================
+        const LS_KEYS = { PARTICIPANTS: 'cc_participants_v1', RESULTS: 'cc_results_v1', USER: 'cc_user_v1' };
+        let supabaseClient = null;
+        let state = { user: null, tab: 'participants', participants: [], results: [], search: '' };
+        let currentEventParticipants = []; // Store current event participants for export
 
-    // ==================== SUPABASE INITIALIZATION ====================
-    function initSupabase() {
-      if (typeof window.supabase === 'undefined') {
-        return false;
-      }
-      try {
-        if (CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY) {
-          supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY, {
-            auth: {
-              persistSession: true,
-              autoRefreshToken: true,
-              detectSessionInUrl: true
+        // ==================== SUPABASE INITIALIZATION ====================
+        function initSupabase() {
+            if (typeof window.supabase === 'undefined') {
+                return false;
             }
-          });
-          console.log("✓ Supabase initialized");
-          return true;
-        }
-        return false;
-      } catch (err) {
-        console.error("Supabase init failed:", err);
-        return false;
-      }
-    }
-
-    // Initialize Supabase when library loads
-    if (typeof window.supabase !== 'undefined') {
-      initSupabase();
-    } else {
-      window.addEventListener('load', function() {
-        if (!supabase) initSupabase();
-      });
-    }
-
-    // ==================== UTILITIES ====================
-    function normalizeName(n) { return (n||'').trim(); }
-    function uid() { return 'id_'+Math.random().toString(36).slice(2,9); }
-
-    // ==================== LOCAL STORAGE ====================
-    function saveLocal() {
-      localStorage.setItem(LS_KEYS.PARTICIPANTS, JSON.stringify(state.participants));
-      localStorage.setItem(LS_KEYS.RESULTS, JSON.stringify(state.results));
-    }
-    function loadLocal() {
-      state.participants = JSON.parse(localStorage.getItem(LS_KEYS.PARTICIPANTS) || '[]');
-      state.results = JSON.parse(localStorage.getItem(LS_KEYS.RESULTS) || '[]');
-    }
-
-    // ==================== SUPABASE HELPERS ====================
-    async function sb_getParticipants() {
-      if (!supabase) {
-        console.warn('sb_getParticipants: Supabase client not initialized');
-        return [];
-      }
-      console.log('🔵 Making Supabase call: Fetching participants...');
-      const {data, error} = await supabase.from('participants').select('*');
-      if (error) {
-        console.error('❌ Supabase error fetching participants:', error);
-        throw error;
-      }
-      console.log('✅ Supabase call successful: Fetched', data?.length || 0, 'participants');
-      return data || [];
-    }
-
-    async function sb_getResults() {
-      if (!supabase) {
-        console.warn('sb_getResults: Supabase client not initialized');
-        return [];
-      }
-      console.log('🔵 Making Supabase call: Fetching results...');
-      const {data, error} = await supabase.from('results').select('*');
-      if (error) {
-        console.error('❌ Supabase error fetching results:', error);
-        throw error;
-      }
-      console.log('✅ Supabase call successful: Fetched', data?.length || 0, 'results');
-      return data || [];
-    }
-
-    async function sb_createParticipant({name, team, klass, gender, chest_no, events}) {
-      if (!supabase) throw 'Supabase not initialized';
-      const nameTrimmed = normalizeName(name);
-      const {data:existing, error:err1} = await supabase
-        .from('participants')
-        .select('*')
-        .ilike('name', nameTrimmed);
-      if (err1) throw err1;
-      if (existing && existing.length > 0) {
-        const ex = existing[0];
-        const ev = Array.from(new Set([...(ex.events||[]), ...(events||[])]));
-        // Only update chest_no if participant doesn't have one
-        const updateData = {events:ev, team, class:klass, gender: gender || null};
-        const exChestNo = ex.chest_no ? String(ex.chest_no).trim() : '';
-        if (!exChestNo && chest_no) {
-          updateData.chest_no = chest_no;
-        } else if (!exChestNo) {
-          const {data:allParticipants} = await supabase.from('participants').select('chest_no');
-          let nextChest = CONFIG.START_CHEST;
-          if (allParticipants && allParticipants.length > 0) {
-            const chestNumbers = allParticipants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
-            if (chestNumbers.length > 0) {
-              nextChest = Math.max(...chestNumbers) + 1;
+            try {
+                if (CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY) {
+                    supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY, {
+                        auth: {
+                            persistSession: true,
+                            autoRefreshToken: true,
+                            detectSessionInUrl: true
+                        }
+                    });
+                    console.log("✓ Supabase initialized");
+                    return true;
+                }
+                return false;
+            } catch (err) {
+                console.error("Supabase init failed:", err);
+                return false;
             }
-          }
-          updateData.chest_no = String(nextChest);
         }
-        const {error:updateErr} = await supabase.from('participants')
-          .update(updateData)
-          .eq('id', ex.id);
-        if (updateErr) throw updateErr;
-        return {...ex, ...updateData};
-      }
-      // Use provided chest_no or auto-generate
-      let finalChestNo = chest_no;
-      if (!finalChestNo || finalChestNo.trim() === '') {
-        const {data:allParticipants} = await supabase.from('participants').select('chest_no');
-        let nextChest = CONFIG.START_CHEST;
-        if (allParticipants && allParticipants.length > 0) {
-          const chestNumbers = allParticipants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
-          if (chestNumbers.length > 0) {
-            nextChest = Math.max(...chestNumbers) + 1;
-          }
+
+        // Initialize Supabase when library loads
+        if (typeof window.supabase !== 'undefined') {
+            initSupabase();
+        } else {
+            window.addEventListener('load', function () {
+                if (!supabaseClient) initSupabase();
+            });
         }
-        finalChestNo = String(nextChest);
-      }
-      const payload = {name, team, class:klass||'', gender: gender || null, chest_no:finalChestNo, events:events||[]};
-      const {data, error} = await supabase.from('participants').insert([payload]).select().single();
-      if (error) throw error;
-      return data;
-    }
 
-    async function sb_updateParticipant(id, patch) {
-      if (!supabase) throw 'Supabase not initialized';
-      const {data, error} = await supabase.from('participants')
-        .update(patch).eq('id', id).select().single();
-      if (error) throw error;
-      return data;
-    }
+        // ==================== UTILITIES ====================
+        function normalizeName(n) { return (n || '').trim(); }
+        function uid() { return 'id_' + Math.random().toString(36).slice(2, 9); }
 
-    async function sb_deleteParticipant(id) {
-      if (!supabase) throw 'Supabase not initialized';
-      const {error} = await supabase.from('participants').delete().eq('id', id);
-      if (error) throw error;
-      return true;
-    }
-
-    async function sb_addResult({event_id, participant_id, placement, points, note}) {
-      if (!supabase) throw 'Supabase not initialized';
-      const payload = {event_id, participant_id, placement, points, note};
-      const {data, error} = await supabase.from('results').insert([payload]).select().single();
-      if (error) throw error;
-      return data;
-    }
-
-    // ==================== DUAL-MODE CRUD ====================
-    async function createOrGetParticipant({name, team, klass, gender, chest_no, events}) {
-      name = normalizeName(name);
-      if (!name) throw 'Name required';
-      if (supabase && CONFIG.USE_SUPABASE) {
-        return await sb_createParticipant({name, team, klass, gender, chest_no, events});
-      }
-      const existing = state.participants.find(p => p.name.toLowerCase() === name.toLowerCase());
-      if (existing) {
-        const ev = new Set([...(existing.events||[]), ...(events||[])]);
-        existing.events = Array.from(ev);
-        existing.team = team || existing.team;
-        existing.class = klass || existing.class;
-        if (gender) existing.gender = gender;
-        // Only update chest_no if participant doesn't have one
-        const existingChestNo = existing.chest_no ? String(existing.chest_no).trim() : '';
-        if (!existingChestNo && chest_no) {
-          existing.chest_no = chest_no;
-        } else if (!existingChestNo) {
-          const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
-          const nextChest = arr.length === 0 ? CONFIG.START_CHEST : Math.max(...arr) + 1;
-          existing.chest_no = String(nextChest);
+        // ==================== LOCAL STORAGE ====================
+        function saveLocal() {
+            localStorage.setItem(LS_KEYS.PARTICIPANTS, JSON.stringify(state.participants));
+            localStorage.setItem(LS_KEYS.RESULTS, JSON.stringify(state.results));
         }
-        saveLocal();
-        return existing;
-      }
-      // Use provided chest_no or auto-generate
-      let finalChestNo = chest_no;
-      if (!finalChestNo || finalChestNo.trim() === '') {
-        const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
-        finalChestNo = arr.length === 0 ? String(CONFIG.START_CHEST) : String(Math.max(...arr) + 1);
-      }
-      const participant = {
-        id: uid(),
-        name,
-        team,
-        class: klass || '',
-        gender: gender || null,
-        chest_no: finalChestNo,
-        events: events || [],
-        created_at: new Date().toISOString()
-      };
-      state.participants.push(participant);
-      saveLocal();
-      return participant;
-    }
-
-    async function updateParticipant(id, patch) {
-      if (supabase && CONFIG.USE_SUPABASE) {
-        return await sb_updateParticipant(id, patch);
-      }
-      const p = state.participants.find(x => x.id === id);
-      if (!p) return null;
-      if (patch.name) p.name = normalizeName(patch.name);
-      if ('team' in patch) p.team = patch.team;
-      if ('class' in patch) p.class = patch.class;
-      if ('gender' in patch) p.gender = patch.gender;
-      if ('chest_no' in patch) {
-        const dup = state.participants.find(x => x.chest_no === patch.chest_no && x.id !== id);
-        if (dup) throw 'Chest number already used';
-        p.chest_no = patch.chest_no;
-      }
-      saveLocal();
-      return p;
-    }
-
-    async function deleteParticipant(id) {
-      if (supabase && CONFIG.USE_SUPABASE) {
-        return await sb_deleteParticipant(id);
-      }
-      state.participants = state.participants.filter(p => p.id !== id);
-      state.results = state.results.filter(r => r.participant_id !== id);
-      saveLocal();
-    }
-
-    function computePoints(event_id, placement, isGroup = null) {
-      // If isGroup is provided, use it; otherwise check the event
-      let isGroupEvent = isGroup;
-      if (isGroupEvent === null) {
-        const ev = EVENTS.find(e => e.id === event_id);
-        if (!ev) return 0;
-        isGroupEvent = ev.isGroup;
-      }
-      
-      const p = parseInt(placement, 10);
-      if (isGroupEvent) {
-        // Group events: 1st = 5, 2nd = 3, 3rd = 1
-        if (p === 1) return 5;
-        if (p === 2) return 3;
-        if (p === 3) return 1;
-      } else {
-        // Individual events: 1st = 8, 2nd = 5, 3rd = 3
-        if (p === 1) return 8;
-        if (p === 2) return 5;
-        if (p === 3) return 3;
-      }
-      return 0;
-    }
-
-    async function addResult({event_id, participant_id, placement, points, note}) {
-      if (points === undefined || points === null) {
-        points = computePoints(event_id, placement);
-      }
-      if (supabase && CONFIG.USE_SUPABASE) {
-        return await sb_addResult({event_id, participant_id, placement, points, note});
-      }
-      const res = {
-        id: uid(),
-        event_id,
-        participant_id,
-        placement: parseInt(placement, 10),
-        points: parseInt(points, 10),
-        note: note || '',
-        created_at: new Date().toISOString()
-      };
-      state.results.push(res);
-      saveLocal();
-      return res;
-    }
-
-    // ==================== LEADERBOARDS ====================
-    function computeScores() {
-      const perStudent = {};
-      for (const r of state.results) {
-        if (!perStudent[r.participant_id]) perStudent[r.participant_id] = 0;
-        perStudent[r.participant_id] += (r.points || 0);
-      }
-      // Get all students with scores (including those without gender for team calculations)
-      const allStudents = Object.keys(perStudent).map(pid => {
-        const p = state.participants.find(x => x.id === pid) || {name:'Unknown', team:'Unknown', chest_no:'000', gender:null};
-        return {
-          participant_id: pid,
-          name: p.name,
-          team: p.team,
-          chest_no: p.chest_no,
-          gender: p.gender || null,
-          points: perStudent[pid]
-        };
-      });
-      
-      // Filter students for Individual Leaderboard (only Male or Female)
-      const students = allStudents
-        .filter(s => s.gender === 'Male' || s.gender === 'Female')
-        .sort((a, b) => b.points - a.points);
-      
-      // Separate by gender
-      const maleStudents = students.filter(s => s.gender === 'Male').sort((a, b) => b.points - a.points);
-      const femaleStudents = students.filter(s => s.gender === 'Female').sort((a, b) => b.points - a.points);
-      
-      // Calculate team scores from ALL students (regardless of gender)
-      const teams = {};
-      for (const s of allStudents) {
-        teams[s.team] = (teams[s.team] || 0) + s.points;
-      }
-      const teamArr = Object.keys(teams).map(t => ({team:t, points:teams[t]})).sort((a, b) => b.points - a.points);
-      return {students, teams:teamArr, maleStudents, femaleStudents};
-    }
-
-    function exportLeaderboardXls() {
-      const {students, teams} = computeScores();
-      let csv = 'Rank,Name,Team,Chest No,Points\n';
-      students.forEach((s, i) => {
-        csv += `${i+1},"${s.name}","${s.team}",${s.chest_no},${s.points}\n`;
-      });
-      csv += '\n\nTeam Rankings\n';
-      csv += 'Rank,Team,Points\n';
-      teams.forEach((t, i) => {
-        csv += `${i+1},"${t.team}",${t.points}\n`;
-      });
-      const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `leaderboard_${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    function exportParticipantsXls() {
-      // Filter participants to only include those with gender (Male or Female)
-      const participantsWithGender = state.participants
-        .filter(p => p.gender === 'Male' || p.gender === 'Female')
-        .sort((a, b) => {
-          // Sort by team first, then by name
-          if (a.team !== b.team) return a.team.localeCompare(b.team);
-          return a.name.localeCompare(b.name);
-        });
-      
-      // Check if XLSX library is loaded
-      if (typeof XLSX === 'undefined') {
-        alert('Excel library not loaded. Please refresh the page and try again.');
-        return;
-      }
-      
-      // Prepare data for Excel
-      const headers = ['Name', 'Team', 'Class', 'Gender', 'Chest No', 'Events'];
-      const data = participantsWithGender.map(p => [
-        p.name || '',
-        p.team || '',
-        p.class || '',
-        p.gender || '',
-        p.chest_no || '',
-        (p.events || []).join(';')
-      ]);
-      
-      // Create workbook and worksheet
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
-      
-      // Set column widths
-      ws['!cols'] = [
-        { wch: 25 }, // Name
-        { wch: 12 }, // Team
-        { wch: 15 }, // Class
-        { wch: 10 }, // Gender
-        { wch: 12 }, // Chest No
-        { wch: 50 }  // Events
-      ];
-      
-      // Style header row (bold and borders)
-      const range = XLSX.utils.decode_range(ws['!ref']);
-      for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
-        if (!ws[cellAddress]) continue;
-        ws[cellAddress].s = {
-          font: { bold: true },
-          fill: { fgColor: { rgb: "E0E0E0" } },
-          border: {
-            top: { style: "thin" },
-            bottom: { style: "thin" },
-            left: { style: "thin" },
-            right: { style: "thin" }
-          },
-          alignment: { horizontal: "center", vertical: "center" }
-        };
-      }
-      
-      // Add borders to all data cells
-      for (let R = 1; R <= range.e.r; ++R) {
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-          const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
-          if (!ws[cellAddress]) {
-            ws[cellAddress] = { t: 's', v: '' };
-          }
-          if (!ws[cellAddress].s) {
-            ws[cellAddress].s = {};
-          }
-          ws[cellAddress].s.border = {
-            top: { style: "thin" },
-            bottom: { style: "thin" },
-            left: { style: "thin" },
-            right: { style: "thin" }
-          };
+        function loadLocal() {
+            state.participants = JSON.parse(localStorage.getItem(LS_KEYS.PARTICIPANTS) || '[]');
+            state.results = JSON.parse(localStorage.getItem(LS_KEYS.RESULTS) || '[]');
         }
-      }
-      
-      // Add worksheet to workbook
-      XLSX.utils.book_append_sheet(wb, ws, 'Participants');
-      
-      // Generate Excel file
-      const fileName = `participants_${new Date().toISOString().split('T')[0]}.xlsx`;
-      XLSX.writeFile(wb, fileName);
-    }
 
-    function exportEventParticipantsXls() {
-      // Check if XLSX library is loaded
-      if (typeof XLSX === 'undefined') {
-        alert('Excel library not loaded. Please refresh the page and try again.');
-        return;
-      }
-      
-      if (!currentEventParticipants || currentEventParticipants.length === 0) {
-        alert('No participants to export. Please select an event and click "Show Participants" first.');
-        return;
-      }
-      
-      // Get the current event name for the filename
-      const eventsOffstage = document.getElementById('events_offstage');
-      const eventsOnstage = document.getElementById('events_onstage');
-      const selectedEventId = (eventsOffstage && eventsOffstage.value) || (eventsOnstage && eventsOnstage.value) || '';
-      const ev = EVENTS.find(e => e.id === selectedEventId);
-      const eventName = ev ? ev.name.replace(/[^a-zA-Z0-9]/g, '_') : 'Event';
-      
-      // Prepare data for Excel with event header information
-      const eventInfo = [
-        [ev ? ev.name : 'Event'],
-        ['Event ID: ' + (ev ? ev.id : '')],
-        ['Total Participants: ' + currentEventParticipants.length],
-        [] // Empty row
-      ];
-      
-      const headers = ['Name', 'Team', 'Class', 'Gender', 'Chest No'];
-      const data = currentEventParticipants.map(p => [
-        p.name || '',
-        p.team || '',
-        p.class || '',
-        p.gender || '',
-        p.chest_no || ''
-      ]);
-      
-      // Combine all data
-      const allData = [...eventInfo, headers, ...data];
-      
-      // Create workbook and worksheet
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.aoa_to_sheet(allData);
-      
-      // Set column widths
-      ws['!cols'] = [
-        { wch: 25 }, // Name
-        { wch: 12 }, // Team
-        { wch: 15 }, // Class
-        { wch: 10 }, // Gender
-        { wch: 12 }  // Chest No
-      ];
-      
-      // Style event info rows (bold)
-      ws['A1'].s = { font: { bold: true, sz: 14 } };
-      ws['A2'].s = { font: { bold: true } };
-      ws['A3'].s = { font: { bold: true } };
-      
-      // Style header row (row 5, index 4) - bold, gray background, borders, centered
-      const headerRowIndex = eventInfo.length; // This is where headers start
-      const range = XLSX.utils.decode_range(ws['!ref']);
-      
-      for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cellAddress = XLSX.utils.encode_cell({ r: headerRowIndex, c: C });
-        if (!ws[cellAddress]) continue;
-        ws[cellAddress].s = {
-          font: { bold: true, color: { rgb: "000000" } },
-          fill: { fgColor: { rgb: "D3D3D3" }, patternType: "solid" },
-          border: {
-            top: { style: "thin", color: { rgb: "000000" } },
-            bottom: { style: "thin", color: { rgb: "000000" } },
-            left: { style: "thin", color: { rgb: "000000" } },
-            right: { style: "thin", color: { rgb: "000000" } }
-          },
-          alignment: { horizontal: "center", vertical: "center" }
-        };
-      }
-      
-      // Add borders to all data cells (starting from row after headers)
-      for (let R = headerRowIndex + 1; R <= range.e.r; ++R) {
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-          const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
-          if (!ws[cellAddress]) {
-            ws[cellAddress] = { t: 's', v: '' };
-          }
-          if (!ws[cellAddress].s) {
-            ws[cellAddress].s = {};
-          }
-          ws[cellAddress].s.border = {
-            top: { style: "thin", color: { rgb: "000000" } },
-            bottom: { style: "thin", color: { rgb: "000000" } },
-            left: { style: "thin", color: { rgb: "000000" } },
-            right: { style: "thin", color: { rgb: "000000" } }
-          };
+        // ==================== SUPABASE HELPERS ====================
+        async function sb_getParticipants() {
+            if (!supabaseClient) {
+                console.warn('sb_getParticipants: Supabase client not initialized');
+                return [];
+            }
+            console.log('🔵 Making Supabase call: Fetching participants...');
+            const { data, error } = await supabaseClient.from('participants').select('*');
+            if (error) {
+                console.error('❌ Supabase error fetching participants:', error);
+                throw error;
+            }
+            console.log('✅ Supabase call successful: Fetched', data?.length || 0, 'participants');
+            return data || [];
         }
-      }
-      
-      // Add worksheet to workbook
-      XLSX.utils.book_append_sheet(wb, ws, 'Participants');
-      
-      // Generate Excel file with styling
-      const fileName = `${eventName}_participants_${new Date().toISOString().split('T')[0]}.xlsx`;
-      XLSX.writeFile(wb, fileName, { cellStyles: true });
-    }
 
-    // ==================== CSV PARSING ====================
-    function parseCSV(text) {
-      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-      const headers = lines[0].split(/,|\t|\|/).map(h => h.trim().toLowerCase());
-      const rows = lines.slice(1).map(line => {
-        const cols = line.split(/,|\t|\|/).map(c => c.trim());
-        const obj = {};
-        for (let i = 0; i < headers.length; i++) {
-          obj[headers[i]] = cols[i] || '';
+        async function sb_getResults() {
+            if (!supabaseClient) {
+                console.warn('sb_getResults: Supabase client not initialized');
+                return [];
+            }
+            console.log('🔵 Making Supabase call: Fetching results...');
+            const { data, error } = await supabaseClient.from('results').select('*');
+            if (error) {
+                console.error('❌ Supabase error fetching results:', error);
+                throw error;
+            }
+            console.log('✅ Supabase call successful: Fetched', data?.length || 0, 'results');
+            return data || [];
         }
-        return obj;
-      });
-      return rows;
-    }
 
-    // ==================== UI RENDERING ====================
-    const TABS = [
-      {id:'participants', label:'Participants'},
-      {id:'events', label:'Events'},
-      {id:'results', label:'Results Entry'},
-      {id:'leaderboard', label:'Leaderboards'},
-      {id:'admin', label:'Admin'}
-    ];
+        async function sb_createParticipant({ name, team, klass, gender, chest_no, events }) {
+            if (!supabaseClient) throw 'Supabase not initialized';
+            const nameTrimmed = normalizeName(name);
+            const { data: existing, error: err1 } = await supabaseClient
+                .from('participants')
+                .select('*')
+                .ilike('name', nameTrimmed);
+            if (err1) throw err1;
+            if (existing && existing.length > 0) {
+                const ex = existing[0];
+                const ev = Array.from(new Set([...(ex.events || []), ...(events || [])]));
+                // Only update chest_no if participant doesn't have one
+                const updateData = { events: ev, team, class: klass, gender: gender || null };
+                const exChestNo = ex.chest_no ? String(ex.chest_no).trim() : '';
+                if (!exChestNo && chest_no) {
+                    updateData.chest_no = chest_no;
+                } else if (!exChestNo) {
+                    const { data: allParticipants } = await supabaseClient.from('participants').select('chest_no');
+                    let nextChest = CONFIG.START_CHEST;
+                    if (allParticipants && allParticipants.length > 0) {
+                        const chestNumbers = allParticipants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
+                        if (chestNumbers.length > 0) {
+                            nextChest = Math.max(...chestNumbers) + 1;
+                        }
+                    }
+                    updateData.chest_no = String(nextChest);
+                }
+                const { error: updateErr } = await supabaseClient.from('participants')
+                    .update(updateData)
+                    .eq('id', ex.id);
+                if (updateErr) throw updateErr;
+                return { ...ex, ...updateData };
+            }
+            // Use provided chest_no or auto-generate
+            let finalChestNo = chest_no;
+            if (!finalChestNo || finalChestNo.trim() === '') {
+                const { data: allParticipants } = await supabaseClient.from('participants').select('chest_no');
+                let nextChest = CONFIG.START_CHEST;
+                if (allParticipants && allParticipants.length > 0) {
+                    const chestNumbers = allParticipants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
+                    if (chestNumbers.length > 0) {
+                        nextChest = Math.max(...chestNumbers) + 1;
+                    }
+                }
+                finalChestNo = String(nextChest);
+            }
+            const payload = { name, team, class: klass || '', gender: gender || null, chest_no: finalChestNo, events: events || [] };
+            const { data, error } = await supabaseClient.from('participants').insert([payload]).select().single();
+            if (error) throw error;
+            return data;
+        }
 
-    function render() {
-      const tabsEl = document.getElementById('tabs');
-      if (!tabsEl) return;
-      tabsEl.innerHTML = '';
-      TABS.forEach(t => {
-        const b = document.createElement('button');
-        b.className = 'tab' + (state.tab === t.id ? ' active' : '');
-        b.textContent = t.label;
-        b.onclick = () => { 
-          state.tab = t.id; 
-          render(); 
-          afterRender(); 
-        };
-        tabsEl.appendChild(b);
-      });
-      const app = document.getElementById('app');
-      if (!app) return;
-      if (!state.user) {
-        app.innerHTML = renderLogin();
-        return;
-      }
-      if (state.tab === 'participants') app.innerHTML = renderParticipants();
-      if (state.tab === 'events') app.innerHTML = renderEvents();
-      if (state.tab === 'results') app.innerHTML = renderResults();
-      if (state.tab === 'leaderboard') app.innerHTML = renderLeaderboard();
-      if (state.tab === 'admin') app.innerHTML = renderAdmin();
-    }
+        async function sb_updateParticipant(id, patch) {
+            if (!supabaseClient) throw 'Supabase not initialized';
+            const { data, error } = await supabaseClient.from('participants')
+                .update(patch).eq('id', id).select().single();
+            if (error) throw error;
+            return data;
+        }
 
-    function renderLogin() {
-      return `
+        async function sb_deleteParticipant(id) {
+            if (!supabaseClient) throw 'Supabase not initialized';
+            const { error } = await supabaseClient.from('participants').delete().eq('id', id);
+            if (error) throw error;
+            return true;
+        }
+
+        async function sb_addResult({ event_id, participant_id, placement, points, note }) {
+            if (!supabaseClient) throw 'Supabase not initialized';
+            const payload = { event_id, participant_id, placement, points, note };
+            const { data, error } = await supabaseClient.from('results').insert([payload]).select().single();
+            if (error) throw error;
+            return data;
+        }
+
+        // ==================== DUAL-MODE CRUD ====================
+        async function createOrGetParticipant({ name, team, klass, gender, chest_no, events }) {
+            name = normalizeName(name);
+            if (!name) throw 'Name required';
+            if (supabaseClient && CONFIG.USE_SUPABASE) {
+                return await sb_createParticipant({ name, team, klass, gender, chest_no, events });
+            }
+            const existing = state.participants.find(p => p.name.toLowerCase() === name.toLowerCase());
+            if (existing) {
+                const ev = new Set([...(existing.events || []), ...(events || [])]);
+                existing.events = Array.from(ev);
+                existing.team = team || existing.team;
+                existing.class = klass || existing.class;
+                if (gender) existing.gender = gender;
+                // Only update chest_no if participant doesn't have one
+                const existingChestNo = existing.chest_no ? String(existing.chest_no).trim() : '';
+                if (!existingChestNo && chest_no) {
+                    existing.chest_no = chest_no;
+                } else if (!existingChestNo) {
+                    const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
+                    const nextChest = arr.length === 0 ? CONFIG.START_CHEST : Math.max(...arr) + 1;
+                    existing.chest_no = String(nextChest);
+                }
+                saveLocal();
+                return existing;
+            }
+            // Use provided chest_no or auto-generate
+            let finalChestNo = chest_no;
+            if (!finalChestNo || finalChestNo.trim() === '') {
+                const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
+                finalChestNo = arr.length === 0 ? String(CONFIG.START_CHEST) : String(Math.max(...arr) + 1);
+            }
+            const participant = {
+                id: uid(),
+                name,
+                team,
+                class: klass || '',
+                gender: gender || null,
+                chest_no: finalChestNo,
+                events: events || [],
+                created_at: new Date().toISOString()
+            };
+            state.participants.push(participant);
+            saveLocal();
+            return participant;
+        }
+
+        async function updateParticipant(id, patch) {
+            if (supabaseClient && CONFIG.USE_SUPABASE) {
+                return await sb_updateParticipant(id, patch);
+            }
+            const p = state.participants.find(x => x.id === id);
+            if (!p) return null;
+            if (patch.name) p.name = normalizeName(patch.name);
+            if ('team' in patch) p.team = patch.team;
+            if ('class' in patch) p.class = patch.class;
+            if ('gender' in patch) p.gender = patch.gender;
+            if ('chest_no' in patch) {
+                const dup = state.participants.find(x => x.chest_no === patch.chest_no && x.id !== id);
+                if (dup) throw 'Chest number already used';
+                p.chest_no = patch.chest_no;
+            }
+            saveLocal();
+            return p;
+        }
+
+        async function deleteParticipant(id) {
+            if (supabaseClient && CONFIG.USE_SUPABASE) {
+                return await sb_deleteParticipant(id);
+            }
+            state.participants = state.participants.filter(p => p.id !== id);
+            state.results = state.results.filter(r => r.participant_id !== id);
+            saveLocal();
+        }
+
+        function computePoints(event_id, placement, isGroup = null) {
+            // If isGroup is provided, use it; otherwise check the event
+            let isGroupEvent = isGroup;
+            if (isGroupEvent === null) {
+                const ev = EVENTS.find(e => e.id === event_id);
+                if (!ev) return 0;
+                isGroupEvent = ev.isGroup;
+            }
+
+            const p = parseInt(placement, 10);
+            if (isGroupEvent) {
+                // Group events: 1st = 5, 2nd = 3, 3rd = 1
+                if (p === 1) return 5;
+                if (p === 2) return 3;
+                if (p === 3) return 1;
+            } else {
+                // Individual events: 1st = 8, 2nd = 5, 3rd = 3
+                if (p === 1) return 8;
+                if (p === 2) return 5;
+                if (p === 3) return 3;
+            }
+            return 0;
+        }
+
+        async function addResult({ event_id, participant_id, placement, points, note }) {
+            if (points === undefined || points === null) {
+                points = computePoints(event_id, placement);
+            }
+            if (supabaseClient && CONFIG.USE_SUPABASE) {
+                return await sb_addResult({ event_id, participant_id, placement, points, note });
+            }
+            const res = {
+                id: uid(),
+                event_id,
+                participant_id,
+                placement: parseInt(placement, 10),
+                points: parseInt(points, 10),
+                note: note || '',
+                created_at: new Date().toISOString()
+            };
+            state.results.push(res);
+            saveLocal();
+            return res;
+        }
+
+        // ==================== LEADERBOARDS ====================
+        function computeScores() {
+            const perStudent = {};
+            for (const r of state.results) {
+                if (!perStudent[r.participant_id]) perStudent[r.participant_id] = 0;
+                perStudent[r.participant_id] += (r.points || 0);
+            }
+            // Get all students with scores (including those without gender for team calculations)
+            const allStudents = Object.keys(perStudent).map(pid => {
+                const p = state.participants.find(x => x.id === pid) || { name: 'Unknown', team: 'Unknown', chest_no: '000', gender: null };
+                return {
+                    participant_id: pid,
+                    name: p.name,
+                    team: p.team,
+                    chest_no: p.chest_no,
+                    gender: p.gender || null,
+                    points: perStudent[pid]
+                };
+            });
+
+            // Filter students for Individual Leaderboard (only Male or Female)
+            const students = allStudents
+                .filter(s => s.gender === 'Male' || s.gender === 'Female')
+                .sort((a, b) => b.points - a.points);
+
+            // Separate by gender
+            const maleStudents = students.filter(s => s.gender === 'Male').sort((a, b) => b.points - a.points);
+            const femaleStudents = students.filter(s => s.gender === 'Female').sort((a, b) => b.points - a.points);
+
+            // Calculate team scores from ALL students (regardless of gender)
+            const teams = {};
+            for (const s of allStudents) {
+                teams[s.team] = (teams[s.team] || 0) + s.points;
+            }
+            const teamArr = Object.keys(teams).map(t => ({ team: t, points: teams[t] })).sort((a, b) => b.points - a.points);
+            return { students, teams: teamArr, maleStudents, femaleStudents };
+        }
+
+        function exportLeaderboardXls() {
+            const { students, teams } = computeScores();
+            let csv = 'Rank,Name,Team,Chest No,Points\n';
+            students.forEach((s, i) => {
+                csv += `${i + 1},"${s.name}","${s.team}",${s.chest_no},${s.points}\n`;
+            });
+            csv += '\n\nTeam Rankings\n';
+            csv += 'Rank,Team,Points\n';
+            teams.forEach((t, i) => {
+                csv += `${i + 1},"${t.team}",${t.points}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `leaderboard_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportParticipantsXls() {
+            // Filter participants to only include those with gender (Male or Female)
+            const participantsWithGender = state.participants
+                .filter(p => p.gender === 'Male' || p.gender === 'Female')
+                .sort((a, b) => {
+                    // Sort by team first, then by name
+                    if (a.team !== b.team) return a.team.localeCompare(b.team);
+                    return a.name.localeCompare(b.name);
+                });
+
+            // Check if XLSX library is loaded
+            if (typeof XLSX === 'undefined') {
+                alert('Excel library not loaded. Please refresh the page and try again.');
+                return;
+            }
+
+            // Prepare data for Excel
+            const headers = ['Name', 'Team', 'Class', 'Gender', 'Chest No', 'Events'];
+            const data = participantsWithGender.map(p => [
+                p.name || '',
+                p.team || '',
+                p.class || '',
+                p.gender || '',
+                p.chest_no || '',
+                (p.events || []).join(';')
+            ]);
+
+            // Create workbook and worksheet
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+
+            // Set column widths
+            ws['!cols'] = [
+                { wch: 25 }, // Name
+                { wch: 12 }, // Team
+                { wch: 15 }, // Class
+                { wch: 10 }, // Gender
+                { wch: 12 }, // Chest No
+                { wch: 50 }  // Events
+            ];
+
+            // Style header row (bold and borders)
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
+                if (!ws[cellAddress]) continue;
+                ws[cellAddress].s = {
+                    font: { bold: true },
+                    fill: { fgColor: { rgb: "E0E0E0" } },
+                    border: {
+                        top: { style: "thin" },
+                        bottom: { style: "thin" },
+                        left: { style: "thin" },
+                        right: { style: "thin" }
+                    },
+                    alignment: { horizontal: "center", vertical: "center" }
+                };
+            }
+
+            // Add borders to all data cells
+            for (let R = 1; R <= range.e.r; ++R) {
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                    if (!ws[cellAddress]) {
+                        ws[cellAddress] = { t: 's', v: '' };
+                    }
+                    if (!ws[cellAddress].s) {
+                        ws[cellAddress].s = {};
+                    }
+                    ws[cellAddress].s.border = {
+                        top: { style: "thin" },
+                        bottom: { style: "thin" },
+                        left: { style: "thin" },
+                        right: { style: "thin" }
+                    };
+                }
+            }
+
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Participants');
+
+            // Generate Excel file
+            const fileName = `participants_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+        }
+
+        function exportEventParticipantsXls() {
+            // Check if XLSX library is loaded
+            if (typeof XLSX === 'undefined') {
+                alert('Excel library not loaded. Please refresh the page and try again.');
+                return;
+            }
+
+            if (!currentEventParticipants || currentEventParticipants.length === 0) {
+                alert('No participants to export. Please select an event and click "Show Participants" first.');
+                return;
+            }
+
+            // Get the current event name for the filename
+            const eventsOffstage = document.getElementById('events_offstage');
+            const eventsOnstage = document.getElementById('events_onstage');
+            const selectedEventId = (eventsOffstage && eventsOffstage.value) || (eventsOnstage && eventsOnstage.value) || '';
+            const ev = EVENTS.find(e => e.id === selectedEventId);
+            const eventName = ev ? ev.name.replace(/[^a-zA-Z0-9]/g, '_') : 'Event';
+
+            // Prepare data for Excel with event header information
+            const eventInfo = [
+                [ev ? ev.name : 'Event'],
+                ['Event ID: ' + (ev ? ev.id : '')],
+                ['Total Participants: ' + currentEventParticipants.length],
+                [] // Empty row
+            ];
+
+            const headers = ['Name', 'Team', 'Class', 'Gender', 'Chest No'];
+            const data = currentEventParticipants.map(p => [
+                p.name || '',
+                p.team || '',
+                p.class || '',
+                p.gender || '',
+                p.chest_no || ''
+            ]);
+
+            // Combine all data
+            const allData = [...eventInfo, headers, ...data];
+
+            // Create workbook and worksheet
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(allData);
+
+            // Set column widths
+            ws['!cols'] = [
+                { wch: 25 }, // Name
+                { wch: 12 }, // Team
+                { wch: 15 }, // Class
+                { wch: 10 }, // Gender
+                { wch: 12 }  // Chest No
+            ];
+
+            // Style event info rows (bold)
+            ws['A1'].s = { font: { bold: true, sz: 14 } };
+            ws['A2'].s = { font: { bold: true } };
+            ws['A3'].s = { font: { bold: true } };
+
+            // Style header row (row 5, index 4) - bold, gray background, borders, centered
+            const headerRowIndex = eventInfo.length; // This is where headers start
+            const range = XLSX.utils.decode_range(ws['!ref']);
+
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellAddress = XLSX.utils.encode_cell({ r: headerRowIndex, c: C });
+                if (!ws[cellAddress]) continue;
+                ws[cellAddress].s = {
+                    font: { bold: true, color: { rgb: "000000" } },
+                    fill: { fgColor: { rgb: "D3D3D3" }, patternType: "solid" },
+                    border: {
+                        top: { style: "thin", color: { rgb: "000000" } },
+                        bottom: { style: "thin", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "000000" } },
+                        right: { style: "thin", color: { rgb: "000000" } }
+                    },
+                    alignment: { horizontal: "center", vertical: "center" }
+                };
+            }
+
+            // Add borders to all data cells (starting from row after headers)
+            for (let R = headerRowIndex + 1; R <= range.e.r; ++R) {
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                    if (!ws[cellAddress]) {
+                        ws[cellAddress] = { t: 's', v: '' };
+                    }
+                    if (!ws[cellAddress].s) {
+                        ws[cellAddress].s = {};
+                    }
+                    ws[cellAddress].s.border = {
+                        top: { style: "thin", color: { rgb: "000000" } },
+                        bottom: { style: "thin", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "000000" } },
+                        right: { style: "thin", color: { rgb: "000000" } }
+                    };
+                }
+            }
+
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Participants');
+
+            // Generate Excel file with styling
+            const fileName = `${eventName}_participants_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName, { cellStyles: true });
+        }
+
+        // ==================== CSV PARSING ====================
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            const headers = lines[0].split(/,|\t|\|/).map(h => h.trim().toLowerCase());
+            const rows = lines.slice(1).map(line => {
+                const cols = line.split(/,|\t|\|/).map(c => c.trim());
+                const obj = {};
+                for (let i = 0; i < headers.length; i++) {
+                    obj[headers[i]] = cols[i] || '';
+                }
+                return obj;
+            });
+            return rows;
+        }
+
+        // ==================== UI RENDERING ====================
+        const TABS = [
+            { id: 'participants', label: 'Participants' },
+            { id: 'events', label: 'Events' },
+            { id: 'results', label: 'Results Entry' },
+            { id: 'leaderboard', label: 'Leaderboards' },
+            { id: 'admin', label: 'Admin' }
+        ];
+
+        function render() {
+            const tabsEl = document.getElementById('tabs');
+            if (!tabsEl) return;
+            tabsEl.innerHTML = '';
+            TABS.forEach(t => {
+                const b = document.createElement('button');
+                b.className = 'tab' + (state.tab === t.id ? ' active' : '');
+                b.textContent = t.label;
+                b.onclick = () => {
+                    state.tab = t.id;
+                    render();
+                    afterRender();
+                };
+                tabsEl.appendChild(b);
+            });
+            const app = document.getElementById('app');
+            if (!app) return;
+            if (!state.user) {
+                app.innerHTML = renderLogin();
+                return;
+            }
+            if (state.tab === 'participants') app.innerHTML = renderParticipants();
+            if (state.tab === 'events') app.innerHTML = renderEvents();
+            if (state.tab === 'results') app.innerHTML = renderResults();
+            if (state.tab === 'leaderboard') app.innerHTML = renderLeaderboard();
+            if (state.tab === 'admin') app.innerHTML = renderAdmin();
+        }
+
+        function renderLogin() {
+            return `
         <div class="card" style="max-width:480px;margin:24px auto">
           <h3>Admin Login</h3>
           <div style="margin-top:8px"><label>Email</label><input id="login_user" type="email" placeholder="your@email.com"/></div>
@@ -711,11 +956,11 @@
           <p class="small muted" style="margin-top:10px">Note: Use the email and password you created in Supabase Dashboard.</p>
         </div>
       `;
-    }
+        }
 
-    function renderParticipants() {
-      const teams = ['Hawks','Harriers','Falcon','Phoenix'];
-      return `
+        function renderParticipants() {
+            const teams = ['Hawks', 'Harriers', 'Falcon', 'Phoenix'];
+            return `
         <div class="grid">
           <div>
             <div class="card">
@@ -730,7 +975,7 @@
                 </div>
               </div>
               <div style="margin-top:8px" class="input-inline">
-                <input id="psearch" placeholder="Search by name / team" value="${state.search||''}"/>
+                <input id="psearch" placeholder="Search by name / team" value="${state.search || ''}"/>
                 <select id="teamFilter">
                   <option value="">All Teams</option>
                   ${teams.map(t => `<option value="${t}">${t}</option>`).join('')}
@@ -742,7 +987,7 @@
                 <div class="item">
                   <div>
                     <strong>${p.name}</strong>
-                    <div class="small muted">${p.team} · Chest: ${p.chest_no} · ${p.class||''}</div>
+                    <div class="small muted">${p.team} · Chest: ${p.chest_no} · ${p.class || ''}</div>
                   </div>
                   <div class="flex">
                     <button class="ghost" data-edit="${p.id}">Edit</button>
@@ -808,12 +1053,12 @@
           </div>
         </div>
       `;
-    }
+        }
 
-    function renderEvents() {
-      const off = EVENTS.filter(e => e.stage === 'offstage');
-      const on = EVENTS.filter(e => e.stage === 'onstage');
-      return `
+        function renderEvents() {
+            const off = EVENTS.filter(e => e.stage === 'offstage');
+            const on = EVENTS.filter(e => e.stage === 'onstage');
+            return `
         <div class="grid">
           <div>
             <div class="card">
@@ -843,14 +1088,14 @@
           </div>
         </div>
       `;
-    }
+        }
 
-    function renderResults() {
-      // Get all participant names for autocomplete
-      const allNames = state.participants.map(p => p.name).filter(Boolean).sort();
-      const namesList = allNames.map(n => `<option value="${n}">`).join('');
-      
-      return `
+        function renderResults() {
+            // Get all participant names for autocomplete
+            const allNames = state.participants.map(p => p.name).filter(Boolean).sort();
+            const namesList = allNames.map(n => `<option value="${n}">`).join('');
+
+            return `
         <div class="grid">
           <div>
             <div class="card">
@@ -889,15 +1134,15 @@
               <h4>Saved Results</h4>
               <div class="list" id="results_list">
                 ${state.results.map(r => {
-                  const p = state.participants.find(p => p.id === r.participant_id) || {name:'Unknown'};
-                  const e = EVENTS.find(e => e.id === r.event_id);
-                  return `
+                const p = state.participants.find(p => p.id === r.participant_id) || { name: 'Unknown' };
+                const e = EVENTS.find(e => e.id === r.event_id);
+                return `
                     <div class="item">
                       <div><strong>${p.name}</strong><div class="small muted">${e?.name || r.event_id} · Pl:${r.placement} · ${r.points} pts</div></div>
                       <div><button class="ghost" data-rid="${r.id}">Edit</button></div>
                     </div>
                   `;
-                }).join('')}
+            }).join('')}
               </div>
             </div>
           </div>
@@ -912,11 +1157,11 @@
           </div>
         </div>
       `;
-    }
+        }
 
-    function renderLeaderboard() {
-      const {students, teams, maleStudents, femaleStudents} = computeScores();
-      return `
+        function renderLeaderboard() {
+            const { students, teams, maleStudents, femaleStudents } = computeScores();
+            return `
         <div class="grid">
           <div>
             <div class="card">
@@ -925,7 +1170,7 @@
               <div class="list">
                 ${students.map((s, i) => `
                   <div class="item">
-                    <div><strong>${i+1}. ${s.name}</strong><div class="small muted">${s.team} · Chest ${s.chest_no}</div></div>
+                    <div><strong>${i + 1}. ${s.name}</strong><div class="small muted">${s.team} · Chest ${s.chest_no}</div></div>
                     <div><strong>${s.points}</strong></div>
                   </div>
                 `).join('')}
@@ -938,7 +1183,7 @@
               <div class="list">
                 ${maleStudents.length > 0 ? maleStudents.map((s, i) => `
                   <div class="item">
-                    <div><strong>${i+1}. ${s.name}</strong><div class="small muted">${s.team} · Chest ${s.chest_no}</div></div>
+                    <div><strong>${i + 1}. ${s.name}</strong><div class="small muted">${s.team} · Chest ${s.chest_no}</div></div>
                     <div><strong>${s.points}</strong></div>
                   </div>
                 `).join('') : '<div class="small muted" style="padding:8px">No male participants with scores yet</div>'}
@@ -950,7 +1195,7 @@
               <div class="list">
                 ${femaleStudents.length > 0 ? femaleStudents.map((s, i) => `
                   <div class="item">
-                    <div><strong>${i+1}. ${s.name}</strong><div class="small muted">${s.team} · Chest ${s.chest_no}</div></div>
+                    <div><strong>${i + 1}. ${s.name}</strong><div class="small muted">${s.team} · Chest ${s.chest_no}</div></div>
                     <div><strong>${s.points}</strong></div>
                   </div>
                 `).join('') : '<div class="small muted" style="padding:8px">No female participants with scores yet</div>'}
@@ -972,196 +1217,196 @@
           </div>
         </div>
       `;
-    }
+        }
 
-    function renderAdmin() {
-      const supabaseStatus = supabase && CONFIG.USE_SUPABASE ? 'Connected' : 'Using localStorage';
-      const statusColor = supabase && CONFIG.USE_SUPABASE ? 'var(--accent)' : 'var(--muted)';
-      return `
+        function renderAdmin() {
+            const supabaseStatus = supabaseClient && CONFIG.USE_SUPABASE ? 'Connected' : 'Using localStorage';
+            const statusColor = supabaseClient && CONFIG.USE_SUPABASE ? 'var(--accent)' : 'var(--muted)';
+            return `
         <div class="card">
           <h3>Admin</h3>
           <div class="small muted" style="margin-top:8px">
             <strong>Data Source:</strong> <span style="color:${statusColor}">${supabaseStatus}</span>
-            ${supabase && CONFIG.USE_SUPABASE ? `<br><span style="font-size:11px">URL: ${CONFIG.SUPABASE_URL}</span>` : ''}
+            ${supabaseClient && CONFIG.USE_SUPABASE ? `<br><span style="font-size:11px">URL: ${CONFIG.SUPABASE_URL}</span>` : ''}
           </div>
           <div style="margin-top:12px" class="row">
             <button id="download_json" class="ghost">Download Data</button>
             <button id="clear_data" class="danger">Clear Local Data</button>
           </div>
-          ${supabase && CONFIG.USE_SUPABASE ? '<div style="margin-top:8px"><button id="test_connection" class="ghost">Test Supabase Connection</button></div>' : ''}
+          ${supabaseClient && CONFIG.USE_SUPABASE ? '<div style="margin-top:8px"><button id="test_connection" class="ghost">Test Supabase Connection</button></div>' : ''}
           <div style="margin-top:12px"><button id="logout" class="ghost">Logout</button></div>
         </div>
       `;
-    }
-
-    // ==================== EVENT HANDLERS ATTACHMENT ====================
-    function attachEventHandlers() {
-      console.log('🔧 Attaching event dropdown handlers...');
-      
-      const offstageSelect = document.getElementById('events_offstage');
-      if (offstageSelect) {
-        console.log('✅ Found events_offstage, attaching handler');
-        // Store reference to avoid issues with cloning
-        const offstageHandler = async function(e) {
-          const id = this.value || e.target.value;
-          console.log('🎯🎯🎯 Offstage event selected:', id);
-          console.log('Event ID type:', typeof id, 'Value:', JSON.stringify(id));
-          if (id) {
-            // Clear onstage selection (mutually exclusive)
-            const onstageSelect = document.getElementById('events_onstage');
-            if (onstageSelect) onstageSelect.value = '';
-            // Load fresh data
-            console.log('⏳ Loading data from database...');
-            await loadData();
-            console.log('✅ Data loaded, showing preview for:', id);
-            // Show preview immediately
-            showEventPreviewForId(id);
-          } else {
-            // Clear preview if no selection
-            const el = document.getElementById('event_preview');
-            if (el) el.innerHTML = 'Select an event';
-          }
-        };
-        
-        // Use onchange for simpler, more reliable attachment
-        offstageSelect.onchange = offstageHandler;
-        console.log('✅ Offstage handler attached via onchange');
-      } else {
-        console.warn('⚠️ events_offstage element not found!');
-      }
-
-      const onstageSelect = document.getElementById('events_onstage');
-      if (onstageSelect) {
-        console.log('✅ Found events_onstage, attaching handler');
-        // Store reference to avoid issues with cloning
-        const onstageHandler = async function(e) {
-          const id = this.value || e.target.value;
-          console.log('🎯🎯🎯 Onstage event selected:', id);
-          console.log('Event ID type:', typeof id, 'Value:', JSON.stringify(id));
-          if (id) {
-            // Clear offstage selection (mutually exclusive)
-            const offstageSelect = document.getElementById('events_offstage');
-            if (offstageSelect) offstageSelect.value = '';
-            // Load fresh data
-            console.log('⏳ Loading data from database...');
-            await loadData();
-            console.log('✅ Data loaded, showing preview for:', id);
-            // Show preview immediately
-            showEventPreviewForId(id);
-          } else {
-            // Clear preview if no selection
-            const el = document.getElementById('event_preview');
-            if (el) el.innerHTML = 'Select an event';
-          }
-        };
-        
-        // Use onchange for simpler, more reliable attachment
-        onstageSelect.onchange = onstageHandler;
-        console.log('✅ Onstage handler attached via onchange');
-      } else {
-        console.warn('⚠️ events_onstage element not found!');
-      }
-    }
-
-    // ==================== EVENTS SUBMIT HANDLER (Global) ====================
-    window.handleEventsSubmit = async function() {
-      console.log('🔘🔘🔘 Submit button clicked (global handler)!');
-      
-      // Get selected event from either dropdown
-      const offstageSelect = document.getElementById('events_offstage');
-      const onstageSelect = document.getElementById('events_onstage');
-      const offstageValue = offstageSelect ? offstageSelect.value : '';
-      const onstageValue = onstageSelect ? onstageSelect.value : '';
-      
-      console.log('Offstage value:', offstageValue);
-      console.log('Onstage value:', onstageValue);
-      
-      const selectedEventId = offstageValue || onstageValue;
-      
-      if (!selectedEventId) {
-        alert('Please select an event from the dropdown');
-        return;
-      }
-      
-      console.log('🎯 Selected event ID:', selectedEventId);
-      
-      // Clear the other dropdown (mutually exclusive)
-      if (offstageValue && onstageSelect) onstageSelect.value = '';
-      if (onstageValue && offstageSelect) offstageSelect.value = '';
-      
-      // Load fresh data from database
-      console.log('⏳ Loading data from database...');
-      await loadData();
-      console.log('✅ Data loaded, showing preview for:', selectedEventId);
-      
-      // Show preview
-      showEventPreviewForId(selectedEventId);
-    };
-
-    // ==================== EVENT PREVIEW FUNCTION ====================
-    function showEventPreviewForId(id) {
-      console.log('showEventPreviewForId called with id:', id);
-      const ev = EVENTS.find(e => e.id === id);
-      if (!ev) {
-        console.warn('Event not found:', id);
-        return;
-      }
-      
-      const el = document.getElementById('event_preview');
-      if (!el) {
-        console.error('event_preview element not found!');
-        return;
-      }
-      
-      console.log('Total participants in state:', state.participants.length);
-      console.log('Looking for event ID:', id, 'Type:', typeof id);
-      
-      // Fetch all participants who have this event in their events array
-      // Events are stored as: ["off_essay_eng", "off_short_eng", "off_photo", ...]
-      if (state.participants.length > 0) {
-        console.log('Sample participant:', {
-          name: state.participants[0].name,
-          events: state.participants[0].events,
-          eventsType: typeof state.participants[0].events,
-          isArray: Array.isArray(state.participants[0].events)
-        });
-      }
-      
-      const participantsIn = state.participants.filter(p => {
-        const participantEvents = p.events || [];
-        let hasEvent = false;
-        
-        if (Array.isArray(participantEvents)) {
-          // Direct array match - events are stored as array of strings matching event IDs
-          hasEvent = participantEvents.includes(id);
-          if (hasEvent) {
-            console.log(`✓ Participant "${p.name}" has event "${id}"`);
-            console.log(`  Events array:`, participantEvents);
-          }
-        } else if (typeof participantEvents === 'string') {
-          // If events is stored as semicolon-separated string (fallback)
-          hasEvent = participantEvents.split(';').map(e => e.trim()).includes(id);
-        } else {
-          console.warn(`Participant "${p.name}" has unexpected events type:`, typeof participantEvents);
         }
-        
-        return hasEvent;
-      });
-      
-      console.log('✅ Found', participantsIn.length, 'participants for event', id);
-      if (participantsIn.length > 0) {
-        console.log('Participants:', participantsIn.map(p => `${p.name} (${p.team})`));
-      } else {
-        console.log('⚠️ No participants found for this event');
-      }
-      
-      // Sort by name for better readability
-      participantsIn.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-      
-      // Store participants for export
-      currentEventParticipants = participantsIn;
-      
-      el.innerHTML = `
+
+        // ==================== EVENT HANDLERS ATTACHMENT ====================
+        function attachEventHandlers() {
+            console.log('🔧 Attaching event dropdown handlers...');
+
+            const offstageSelect = document.getElementById('events_offstage');
+            if (offstageSelect) {
+                console.log('✅ Found events_offstage, attaching handler');
+                // Store reference to avoid issues with cloning
+                const offstageHandler = async function (e) {
+                    const id = this.value || e.target.value;
+                    console.log('🎯🎯🎯 Offstage event selected:', id);
+                    console.log('Event ID type:', typeof id, 'Value:', JSON.stringify(id));
+                    if (id) {
+                        // Clear onstage selection (mutually exclusive)
+                        const onstageSelect = document.getElementById('events_onstage');
+                        if (onstageSelect) onstageSelect.value = '';
+                        // Load fresh data
+                        console.log('⏳ Loading data from database...');
+                        await loadData();
+                        console.log('✅ Data loaded, showing preview for:', id);
+                        // Show preview immediately
+                        showEventPreviewForId(id);
+                    } else {
+                        // Clear preview if no selection
+                        const el = document.getElementById('event_preview');
+                        if (el) el.innerHTML = 'Select an event';
+                    }
+                };
+
+                // Use onchange for simpler, more reliable attachment
+                offstageSelect.onchange = offstageHandler;
+                console.log('✅ Offstage handler attached via onchange');
+            } else {
+                console.warn('⚠️ events_offstage element not found!');
+            }
+
+            const onstageSelect = document.getElementById('events_onstage');
+            if (onstageSelect) {
+                console.log('✅ Found events_onstage, attaching handler');
+                // Store reference to avoid issues with cloning
+                const onstageHandler = async function (e) {
+                    const id = this.value || e.target.value;
+                    console.log('🎯🎯🎯 Onstage event selected:', id);
+                    console.log('Event ID type:', typeof id, 'Value:', JSON.stringify(id));
+                    if (id) {
+                        // Clear offstage selection (mutually exclusive)
+                        const offstageSelect = document.getElementById('events_offstage');
+                        if (offstageSelect) offstageSelect.value = '';
+                        // Load fresh data
+                        console.log('⏳ Loading data from database...');
+                        await loadData();
+                        console.log('✅ Data loaded, showing preview for:', id);
+                        // Show preview immediately
+                        showEventPreviewForId(id);
+                    } else {
+                        // Clear preview if no selection
+                        const el = document.getElementById('event_preview');
+                        if (el) el.innerHTML = 'Select an event';
+                    }
+                };
+
+                // Use onchange for simpler, more reliable attachment
+                onstageSelect.onchange = onstageHandler;
+                console.log('✅ Onstage handler attached via onchange');
+            } else {
+                console.warn('⚠️ events_onstage element not found!');
+            }
+        }
+
+        // ==================== EVENTS SUBMIT HANDLER (Global) ====================
+        window.handleEventsSubmit = async function () {
+            console.log('🔘🔘🔘 Submit button clicked (global handler)!');
+
+            // Get selected event from either dropdown
+            const offstageSelect = document.getElementById('events_offstage');
+            const onstageSelect = document.getElementById('events_onstage');
+            const offstageValue = offstageSelect ? offstageSelect.value : '';
+            const onstageValue = onstageSelect ? onstageSelect.value : '';
+
+            console.log('Offstage value:', offstageValue);
+            console.log('Onstage value:', onstageValue);
+
+            const selectedEventId = offstageValue || onstageValue;
+
+            if (!selectedEventId) {
+                alert('Please select an event from the dropdown');
+                return;
+            }
+
+            console.log('🎯 Selected event ID:', selectedEventId);
+
+            // Clear the other dropdown (mutually exclusive)
+            if (offstageValue && onstageSelect) onstageSelect.value = '';
+            if (onstageValue && offstageSelect) offstageSelect.value = '';
+
+            // Load fresh data from database
+            console.log('⏳ Loading data from database...');
+            await loadData();
+            console.log('✅ Data loaded, showing preview for:', selectedEventId);
+
+            // Show preview
+            showEventPreviewForId(selectedEventId);
+        };
+
+        // ==================== EVENT PREVIEW FUNCTION ====================
+        function showEventPreviewForId(id) {
+            console.log('showEventPreviewForId called with id:', id);
+            const ev = EVENTS.find(e => e.id === id);
+            if (!ev) {
+                console.warn('Event not found:', id);
+                return;
+            }
+
+            const el = document.getElementById('event_preview');
+            if (!el) {
+                console.error('event_preview element not found!');
+                return;
+            }
+
+            console.log('Total participants in state:', state.participants.length);
+            console.log('Looking for event ID:', id, 'Type:', typeof id);
+
+            // Fetch all participants who have this event in their events array
+            // Events are stored as: ["off_essay_eng", "off_short_eng", "off_photo", ...]
+            if (state.participants.length > 0) {
+                console.log('Sample participant:', {
+                    name: state.participants[0].name,
+                    events: state.participants[0].events,
+                    eventsType: typeof state.participants[0].events,
+                    isArray: Array.isArray(state.participants[0].events)
+                });
+            }
+
+            const participantsIn = state.participants.filter(p => {
+                const participantEvents = p.events || [];
+                let hasEvent = false;
+
+                if (Array.isArray(participantEvents)) {
+                    // Direct array match - events are stored as array of strings matching event IDs
+                    hasEvent = participantEvents.includes(id);
+                    if (hasEvent) {
+                        console.log(`✓ Participant "${p.name}" has event "${id}"`);
+                        console.log(`  Events array:`, participantEvents);
+                    }
+                } else if (typeof participantEvents === 'string') {
+                    // If events is stored as semicolon-separated string (fallback)
+                    hasEvent = participantEvents.split(';').map(e => e.trim()).includes(id);
+                } else {
+                    console.warn(`Participant "${p.name}" has unexpected events type:`, typeof participantEvents);
+                }
+
+                return hasEvent;
+            });
+
+            console.log('✅ Found', participantsIn.length, 'participants for event', id);
+            if (participantsIn.length > 0) {
+                console.log('Participants:', participantsIn.map(p => `${p.name} (${p.team})`));
+            } else {
+                console.log('⚠️ No participants found for this event');
+            }
+
+            // Sort by name for better readability
+            participantsIn.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+            // Store participants for export
+            currentEventParticipants = participantsIn;
+
+            el.innerHTML = `
         <div style="margin-bottom:12px">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div>
@@ -1181,8 +1426,8 @@
           </div>
         </div>
         <div class="list" style="max-height:500px;overflow-y:auto">
-          ${participantsIn.length > 0 
-            ? participantsIn.map(pp => `
+          ${participantsIn.length > 0
+                    ? participantsIn.map(pp => `
                 <div class="item">
                   <div>
                     <strong>${pp.name || 'Unknown'}</strong>
@@ -1190,738 +1435,738 @@
                   </div>
                 </div>
               `).join('')
-            : '<div class="small muted" style="padding:12px;text-align:center">No participants registered for this event</div>'
-          }
+                    : '<div class="small muted" style="padding:12px;text-align:center">No participants registered for this event</div>'
+                }
         </div>
       `;
-      
-      // Attach export button handler after DOM update
-      setTimeout(() => {
-        const exportBtn = document.getElementById('export_event_participants');
-        if (exportBtn) {
-          exportBtn.onclick = () => exportEventParticipantsXls();
-        }
-      }, 50);
-    }
-    
-    // Make it globally accessible
-    window.showEventPreviewForId = showEventPreviewForId;
 
-    // ==================== EVENT HANDLERS ====================
-    function afterRender() {
-      // Login
-      const loginBtn = document.getElementById('login_btn');
-      if (loginBtn) {
-        loginBtn.onclick = async () => {
-          const email = document.getElementById('login_user').value.trim();
-          const password = document.getElementById('login_pass').value;
-          
-          if (!email || !password) {
-            alert('Please enter email and password');
-            return;
-          }
-          
-          try {
-            const success = await tryLogin(email, password);
-            if (success) {
-              await loadData();
-              render();
-              afterRender();
-            } else {
-              alert('Invalid credentials');
-            }
-          } catch (err) {
-            alert('Login failed: ' + (err.message || err));
-          }
-        };
-      }
-      const demoBtn = document.getElementById('demo_btn');
-      if (demoBtn) {
-        demoBtn.onclick = () => {
-          state.user = {username:'demo'};
-          // Save demo user to localStorage
-          localStorage.setItem(LS_KEYS.USER, JSON.stringify(state.user));
-          loadLocal();
-          render();
-          afterRender();
-        };
-      }
-
-      // Participants
-      const addNew = document.getElementById('addNew');
-      if (addNew) {
-        addNew.onclick = () => { 
-          // Auto-fill chest number for new participant
-          const chestInput = document.getElementById('qa_chest');
-          if (chestInput && !chestInput.value.trim()) {
-            // Calculate next chest number
-            const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
-            const nextChest = arr.length === 0 ? CONFIG.START_CHEST : Math.max(...arr) + 1;
-            chestInput.value = String(nextChest);
-          }
-          document.getElementById('qa_name')?.focus();
-          // Update refresh button visibility
-          if (typeof updateChestRefreshVisibility === 'function') {
-            updateChestRefreshVisibility();
-          }
-        };
-      }
-      
-      // Function to generate next chest number
-      function generateNextChestNumber() {
-        const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
-        return arr.length === 0 ? CONFIG.START_CHEST : Math.max(...arr) + 1;
-      }
-      
-      // Function to update refresh button visibility
-      function updateChestRefreshVisibility() {
-        const chestInput = document.getElementById('qa_chest');
-        const refreshBtn = document.getElementById('qa_chest_refresh');
-        if (chestInput && refreshBtn) {
-          const isEmpty = !chestInput.value.trim();
-          refreshBtn.style.display = isEmpty ? 'inline-block' : 'none';
+            // Attach export button handler after DOM update
+            setTimeout(() => {
+                const exportBtn = document.getElementById('export_event_participants');
+                if (exportBtn) {
+                    exportBtn.onclick = () => exportEventParticipantsXls();
+                }
+            }, 50);
         }
-      }
-      
-      // Chest number refresh button handler
-      const chestRefreshBtn = document.getElementById('qa_chest_refresh');
-      if (chestRefreshBtn) {
-        chestRefreshBtn.onclick = () => {
-          const chestInput = document.getElementById('qa_chest');
-          if (chestInput) {
-            const nextChest = generateNextChestNumber();
-            chestInput.value = String(nextChest);
-            updateChestRefreshVisibility();
-            showToast(`Chest number set to ${nextChest}`, 'success');
-          }
-        };
-      }
-      
-      // Monitor chest number input for changes
-      const chestInput = document.getElementById('qa_chest');
-      if (chestInput) {
-        chestInput.oninput = updateChestRefreshVisibility;
-        chestInput.onchange = updateChestRefreshVisibility;
-        // Initial visibility check
-        updateChestRefreshVisibility();
-      }
-      
-      const qaAdd = document.getElementById('qa_add');
-      if (qaAdd) {
-        qaAdd.onclick = async () => {
-          try {
-            const editId = document.getElementById('qa_edit_id').value;
-            const name = document.getElementById('qa_name').value.trim();
-            const team = document.getElementById('qa_team').value;
-            const klass = document.getElementById('qa_class').value.trim();
-            const gender = document.getElementById('qa_gender').value;
-            let chest = document.getElementById('qa_chest').value.trim();
-            const eventsSelect = document.getElementById('qa_events');
-            const events = Array.from(eventsSelect.selectedOptions).map(opt => opt.value);
-            
-            if (!name) {
-              showToast('Name is required', 'error');
-              return;
+
+        // Make it globally accessible
+        window.showEventPreviewForId = showEventPreviewForId;
+
+        // ==================== EVENT HANDLERS ====================
+        function afterRender() {
+            // Login
+            const loginBtn = document.getElementById('login_btn');
+            if (loginBtn) {
+                loginBtn.onclick = async () => {
+                    const email = document.getElementById('login_user').value.trim();
+                    const password = document.getElementById('login_pass').value;
+
+                    if (!email || !password) {
+                        alert('Please enter email and password');
+                        return;
+                    }
+
+                    try {
+                        const success = await tryLogin(email, password);
+                        if (success) {
+                            await loadData();
+                            render();
+                            afterRender();
+                        } else {
+                            alert('Invalid credentials');
+                        }
+                    } catch (err) {
+                        alert('Login failed: ' + (err.message || err));
+                    }
+                };
             }
-            
-            if (editId) {
-              // Update existing participant
-              // Only use chest number if provided, otherwise let createOrGetParticipant handle it
-              const updateData = {name, team, class: klass, gender: gender || null, events};
-              if (chest) {
-                updateData.chest_no = chest;
-              }
-              await updateParticipant(editId, updateData);
-              showToast('Participant updated successfully!', 'success');
-            } else {
-              // Create new participant - if chest is empty, don't pass it (let auto-generation handle it)
-              // But if user entered a chest number, use it
-              if (!chest) {
-                // Auto-generate chest number if not provided
+            const demoBtn = document.getElementById('demo_btn');
+            if (demoBtn) {
+                demoBtn.onclick = () => {
+                    state.user = { username: 'demo' };
+                    // Save demo user to localStorage
+                    localStorage.setItem(LS_KEYS.USER, JSON.stringify(state.user));
+                    loadLocal();
+                    render();
+                    afterRender();
+                };
+            }
+
+            // Participants
+            const addNew = document.getElementById('addNew');
+            if (addNew) {
+                addNew.onclick = () => {
+                    // Auto-fill chest number for new participant
+                    const chestInput = document.getElementById('qa_chest');
+                    if (chestInput && !chestInput.value.trim()) {
+                        // Calculate next chest number
+                        const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
+                        const nextChest = arr.length === 0 ? CONFIG.START_CHEST : Math.max(...arr) + 1;
+                        chestInput.value = String(nextChest);
+                    }
+                    document.getElementById('qa_name')?.focus();
+                    // Update refresh button visibility
+                    if (typeof updateChestRefreshVisibility === 'function') {
+                        updateChestRefreshVisibility();
+                    }
+                };
+            }
+
+            // Function to generate next chest number
+            function generateNextChestNumber() {
                 const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
-                const nextChest = arr.length === 0 ? CONFIG.START_CHEST : Math.max(...arr) + 1;
-                chest = String(nextChest);
-              }
-              await createOrGetParticipant({name, team, klass, gender: gender || null, chest_no: chest, events});
-              showToast('Participant added successfully!', 'success');
+                return arr.length === 0 ? CONFIG.START_CHEST : Math.max(...arr) + 1;
             }
-            
-            await loadData();
-            render();
-            afterRender();
-            clearQuickAddForm();
-          } catch(e) {
-            showToast('Error: ' + (e.message || e), 'error');
-          }
-        };
-      }
-      
-      const qaCancel = document.getElementById('qa_cancel');
-      if (qaCancel) {
-        qaCancel.onclick = () => {
-          clearQuickAddForm();
-        };
-      }
 
-      const importBtn = document.getElementById('importBtn');
-      if (importBtn) importBtn.onclick = () => { document.getElementById('csv_text')?.scrollIntoView(); };
-      
-      const doImport = document.getElementById('do_import');
-      if (doImport) {
-        doImport.onclick = async () => {
-          try {
-            const rows = parseCSV(document.getElementById('csv_text').value);
-            for (const r of rows) {
-              await createOrGetParticipant({
-                name: r.name,
-                team: r.team || 'Phoenix',
-                klass: r.class,
-                events: ((r.event_ids || r.events || '') + '').split(';').map(s => s.trim()).filter(Boolean)
-              });
+            // Function to update refresh button visibility
+            function updateChestRefreshVisibility() {
+                const chestInput = document.getElementById('qa_chest');
+                const refreshBtn = document.getElementById('qa_chest_refresh');
+                if (chestInput && refreshBtn) {
+                    const isEmpty = !chestInput.value.trim();
+                    refreshBtn.style.display = isEmpty ? 'inline-block' : 'none';
+                }
             }
-            alert('Imported ' + rows.length + ' rows');
-            await loadData();
-            render();
-            afterRender();
-          } catch(e) {
-            alert('Import failed: ' + e);
-          }
-        };
-      }
 
-      const psearch = document.getElementById('psearch');
-      if (psearch) {
-        psearch.oninput = (e) => {
-          state.search = e.target.value;
-          filterParticipantsList();
-        };
-      }
-      const teamFilter = document.getElementById('teamFilter');
-      if (teamFilter) {
-        teamFilter.onchange = () => filterParticipantsList();
-      }
-      
-      // Participants export button
-      const exportParticipantsBtn = document.getElementById('exportParticipants');
-      if (exportParticipantsBtn) {
-        exportParticipantsBtn.onclick = () => exportParticipantsXls();
-      }
+            // Chest number refresh button handler
+            const chestRefreshBtn = document.getElementById('qa_chest_refresh');
+            if (chestRefreshBtn) {
+                chestRefreshBtn.onclick = () => {
+                    const chestInput = document.getElementById('qa_chest');
+                    if (chestInput) {
+                        const nextChest = generateNextChestNumber();
+                        chestInput.value = String(nextChest);
+                        updateChestRefreshVisibility();
+                        showToast(`Chest number set to ${nextChest}`, 'success');
+                    }
+                };
+            }
 
-      function filterParticipantsList() {
-        const list = document.getElementById('participants_list');
-        if (!list) return;
-        const q = (document.getElementById('psearch')?.value || '').toLowerCase();
-        const team = document.getElementById('teamFilter')?.value || '';
-        list.innerHTML = '';
-        const filtered = state.participants.filter(p =>
-          (p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)) &&
-          (team ? p.team === team : true)
-        );
-        filtered.forEach(p => {
-          const div = document.createElement('div');
-          div.className = 'item';
-          div.innerHTML = `
-            <div><strong>${p.name}</strong><div class="small muted">${p.team} · Chest: ${p.chest_no} · ${p.class||''}</div></div>
+            // Monitor chest number input for changes
+            const chestInput = document.getElementById('qa_chest');
+            if (chestInput) {
+                chestInput.oninput = updateChestRefreshVisibility;
+                chestInput.onchange = updateChestRefreshVisibility;
+                // Initial visibility check
+                updateChestRefreshVisibility();
+            }
+
+            const qaAdd = document.getElementById('qa_add');
+            if (qaAdd) {
+                qaAdd.onclick = async () => {
+                    try {
+                        const editId = document.getElementById('qa_edit_id').value;
+                        const name = document.getElementById('qa_name').value.trim();
+                        const team = document.getElementById('qa_team').value;
+                        const klass = document.getElementById('qa_class').value.trim();
+                        const gender = document.getElementById('qa_gender').value;
+                        let chest = document.getElementById('qa_chest').value.trim();
+                        const eventsSelect = document.getElementById('qa_events');
+                        const events = Array.from(eventsSelect.selectedOptions).map(opt => opt.value);
+
+                        if (!name) {
+                            showToast('Name is required', 'error');
+                            return;
+                        }
+
+                        if (editId) {
+                            // Update existing participant
+                            // Only use chest number if provided, otherwise let createOrGetParticipant handle it
+                            const updateData = { name, team, class: klass, gender: gender || null, events };
+                            if (chest) {
+                                updateData.chest_no = chest;
+                            }
+                            await updateParticipant(editId, updateData);
+                            showToast('Participant updated successfully!', 'success');
+                        } else {
+                            // Create new participant - if chest is empty, don't pass it (let auto-generation handle it)
+                            // But if user entered a chest number, use it
+                            if (!chest) {
+                                // Auto-generate chest number if not provided
+                                const arr = state.participants.map(p => parseInt(p.chest_no, 10)).filter(n => !isNaN(n));
+                                const nextChest = arr.length === 0 ? CONFIG.START_CHEST : Math.max(...arr) + 1;
+                                chest = String(nextChest);
+                            }
+                            await createOrGetParticipant({ name, team, klass, gender: gender || null, chest_no: chest, events });
+                            showToast('Participant added successfully!', 'success');
+                        }
+
+                        await loadData();
+                        render();
+                        afterRender();
+                        clearQuickAddForm();
+                    } catch (e) {
+                        showToast('Error: ' + (e.message || e), 'error');
+                    }
+                };
+            }
+
+            const qaCancel = document.getElementById('qa_cancel');
+            if (qaCancel) {
+                qaCancel.onclick = () => {
+                    clearQuickAddForm();
+                };
+            }
+
+            const importBtn = document.getElementById('importBtn');
+            if (importBtn) importBtn.onclick = () => { document.getElementById('csv_text')?.scrollIntoView(); };
+
+            const doImport = document.getElementById('do_import');
+            if (doImport) {
+                doImport.onclick = async () => {
+                    try {
+                        const rows = parseCSV(document.getElementById('csv_text').value);
+                        for (const r of rows) {
+                            await createOrGetParticipant({
+                                name: r.name,
+                                team: r.team || 'Phoenix',
+                                klass: r.class,
+                                events: ((r.event_ids || r.events || '') + '').split(';').map(s => s.trim()).filter(Boolean)
+                            });
+                        }
+                        alert('Imported ' + rows.length + ' rows');
+                        await loadData();
+                        render();
+                        afterRender();
+                    } catch (e) {
+                        alert('Import failed: ' + e);
+                    }
+                };
+            }
+
+            const psearch = document.getElementById('psearch');
+            if (psearch) {
+                psearch.oninput = (e) => {
+                    state.search = e.target.value;
+                    filterParticipantsList();
+                };
+            }
+            const teamFilter = document.getElementById('teamFilter');
+            if (teamFilter) {
+                teamFilter.onchange = () => filterParticipantsList();
+            }
+
+            // Participants export button
+            const exportParticipantsBtn = document.getElementById('exportParticipants');
+            if (exportParticipantsBtn) {
+                exportParticipantsBtn.onclick = () => exportParticipantsXls();
+            }
+
+            function filterParticipantsList() {
+                const list = document.getElementById('participants_list');
+                if (!list) return;
+                const q = (document.getElementById('psearch')?.value || '').toLowerCase();
+                const team = document.getElementById('teamFilter')?.value || '';
+                list.innerHTML = '';
+                const filtered = state.participants.filter(p =>
+                    (p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)) &&
+                    (team ? p.team === team : true)
+                );
+                filtered.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.innerHTML = `
+            <div><strong>${p.name}</strong><div class="small muted">${p.team} · Chest: ${p.chest_no} · ${p.class || ''}</div></div>
             <div class="flex">
               <button class="ghost" data-edit="${p.id}">Edit</button>
               <button class="danger" data-del="${p.id}">Del</button>
             </div>
           `;
-          list.appendChild(div);
-        });
-        list.querySelectorAll('[data-edit]').forEach(b => {
-          b.onclick = () => openEditParticipant(b.getAttribute('data-edit'));
-        });
-        list.querySelectorAll('[data-del]').forEach(b => {
-          b.onclick = () => {
-            if (confirm('Delete?')) {
-              deleteParticipant(b.getAttribute('data-del')).then(() => {
-                loadData().then(() => render());
-              });
+                    list.appendChild(div);
+                });
+                list.querySelectorAll('[data-edit]').forEach(b => {
+                    b.onclick = () => openEditParticipant(b.getAttribute('data-edit'));
+                });
+                list.querySelectorAll('[data-del]').forEach(b => {
+                    b.onclick = () => {
+                        if (confirm('Delete?')) {
+                            deleteParticipant(b.getAttribute('data-del')).then(() => {
+                                loadData().then(() => render());
+                            });
+                        }
+                    };
+                });
             }
-          };
-        });
-      }
 
-      if (state.tab === 'participants' && state.user) {
-        filterParticipantsList();
-      }
+            if (state.tab === 'participants' && state.user) {
+                filterParticipantsList();
+            }
 
-      // Events - Attach submit button handler (always check, not just when tab is events)
-      const eventsSubmitBtn = document.getElementById('events_submit');
-      if (eventsSubmitBtn) {
-        console.log('✅ Found events_submit button, attaching handler');
-        // Remove any existing handler first
-        eventsSubmitBtn.onclick = null;
-        // Define the handler function
-        const handleSubmit = async function(e) {
-          if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-          console.log('🔘🔘🔘 Submit button clicked!');
-          
-          // Get selected event from either dropdown
-          const offstageSelect = document.getElementById('events_offstage');
-          const onstageSelect = document.getElementById('events_onstage');
-          const offstageValue = offstageSelect ? offstageSelect.value : '';
-          const onstageValue = onstageSelect ? onstageSelect.value : '';
-          
-          console.log('Offstage value:', offstageValue);
-          console.log('Onstage value:', onstageValue);
-          
-          const selectedEventId = offstageValue || onstageValue;
-          
-          if (!selectedEventId) {
-            alert('Please select an event from the dropdown');
-            return;
-          }
-          
-          console.log('🎯 Selected event ID:', selectedEventId);
-          console.log('Event ID type:', typeof selectedEventId);
-          
-          // Clear the other dropdown (mutually exclusive)
-          if (offstageValue && onstageSelect) {
-            onstageSelect.value = '';
-          }
-          if (onstageValue && offstageSelect) {
-            offstageSelect.value = '';
-          }
-          
-          // Load fresh data from database
-          console.log('⏳ Loading data from database...');
-          await loadData();
-          console.log('✅ Data loaded, showing preview for:', selectedEventId);
-          console.log('Total participants loaded:', state.participants.length);
-          
-          // Show preview
-          showEventPreviewForId(selectedEventId);
-        };
-        
-        // Attach using both methods for maximum compatibility
-        eventsSubmitBtn.onclick = handleSubmit;
-        eventsSubmitBtn.addEventListener('click', handleSubmit, {once: false});
-        
-        // Also make it available globally for inline onclick
-        window.handleEventsSubmit = handleSubmit;
-        
-        console.log('✅ Handler attached to events_submit button');
-        
-        // Event participants export button (check after a delay to ensure DOM is updated)
-        setTimeout(() => {
-          const exportEventParticipantsBtn = document.getElementById('export_event_participants');
-          if (exportEventParticipantsBtn) {
-            exportEventParticipantsBtn.onclick = () => exportEventParticipantsXls();
-            console.log('✅ Export button handler attached');
-          }
-        }, 100);
-      } else {
-        if (state.tab === 'events') {
-          console.warn('⚠️ events_submit button not found! Tab:', state.tab);
-        }
-      }
+            // Events - Attach submit button handler (always check, not just when tab is events)
+            const eventsSubmitBtn = document.getElementById('events_submit');
+            if (eventsSubmitBtn) {
+                console.log('✅ Found events_submit button, attaching handler');
+                // Remove any existing handler first
+                eventsSubmitBtn.onclick = null;
+                // Define the handler function
+                const handleSubmit = async function (e) {
+                    if (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    console.log('🔘🔘🔘 Submit button clicked!');
+
+                    // Get selected event from either dropdown
+                    const offstageSelect = document.getElementById('events_offstage');
+                    const onstageSelect = document.getElementById('events_onstage');
+                    const offstageValue = offstageSelect ? offstageSelect.value : '';
+                    const onstageValue = onstageSelect ? onstageSelect.value : '';
+
+                    console.log('Offstage value:', offstageValue);
+                    console.log('Onstage value:', onstageValue);
+
+                    const selectedEventId = offstageValue || onstageValue;
+
+                    if (!selectedEventId) {
+                        alert('Please select an event from the dropdown');
+                        return;
+                    }
+
+                    console.log('🎯 Selected event ID:', selectedEventId);
+                    console.log('Event ID type:', typeof selectedEventId);
+
+                    // Clear the other dropdown (mutually exclusive)
+                    if (offstageValue && onstageSelect) {
+                        onstageSelect.value = '';
+                    }
+                    if (onstageValue && offstageSelect) {
+                        offstageSelect.value = '';
+                    }
+
+                    // Load fresh data from database
+                    console.log('⏳ Loading data from database...');
+                    await loadData();
+                    console.log('✅ Data loaded, showing preview for:', selectedEventId);
+                    console.log('Total participants loaded:', state.participants.length);
+
+                    // Show preview
+                    showEventPreviewForId(selectedEventId);
+                };
+
+                // Attach using both methods for maximum compatibility
+                eventsSubmitBtn.onclick = handleSubmit;
+                eventsSubmitBtn.addEventListener('click', handleSubmit, { once: false });
+
+                // Also make it available globally for inline onclick
+                window.handleEventsSubmit = handleSubmit;
+
+                console.log('✅ Handler attached to events_submit button');
+
+                // Event participants export button (check after a delay to ensure DOM is updated)
+                setTimeout(() => {
+                    const exportEventParticipantsBtn = document.getElementById('export_event_participants');
+                    if (exportEventParticipantsBtn) {
+                        exportEventParticipantsBtn.onclick = () => exportEventParticipantsXls();
+                        console.log('✅ Export button handler attached');
+                    }
+                }, 100);
+            } else {
+                if (state.tab === 'events') {
+                    console.warn('⚠️ events_submit button not found! Tab:', state.tab);
+                }
+            }
             // Results - Setup handlers only when Results tab is active
-      if (state.tab === 'results' && state.user) {
-        console.log('🔍 Results tab is active, checking for elements...');
-        // Use setTimeout to ensure DOM is fully rendered after innerHTML is set
-        setTimeout(() => {
-          const resEventTypeCheck = document.getElementById('res_event_type');
-          if (resEventTypeCheck) {
-            console.log('✅ Results tab elements found, setting up handlers...');
-            if (typeof setupResultsHandlers === 'function') {
-              console.log('✅ setupResultsHandlers is a function, calling it...');
-              setupResultsHandlers();
-            } else {
-              console.error('❌ setupResultsHandlers is not a function! Type:', typeof setupResultsHandlers);
+            if (state.tab === 'results' && state.user) {
+                console.log('🔍 Results tab is active, checking for elements...');
+                // Use setTimeout to ensure DOM is fully rendered after innerHTML is set
+                setTimeout(() => {
+                    const resEventTypeCheck = document.getElementById('res_event_type');
+                    if (resEventTypeCheck) {
+                        console.log('✅ Results tab elements found, setting up handlers...');
+                        if (typeof setupResultsHandlers === 'function') {
+                            console.log('✅ setupResultsHandlers is a function, calling it...');
+                            setupResultsHandlers();
+                        } else {
+                            console.error('❌ setupResultsHandlers is not a function! Type:', typeof setupResultsHandlers);
+                        }
+                    } else {
+                        console.warn('⚠️ Results tab elements not found after timeout. Tab:', state.tab);
+                    }
+                }, 100);
             }
-          } else {
-            console.warn('⚠️ Results tab elements not found after timeout. Tab:', state.tab);
-          }
-        }, 100);
-      }
-      
-      function setupResultsHandlers() {
-        console.log('🔧🔧🔧 setupResultsHandlers() FUNCTION CALLED!');
-        console.log('🔧 Setting up Results Entry handlers...');
-        const resEventType = document.getElementById('res_event_type');
-        const resEvent = document.getElementById('res_event');
-        
-        console.log('resEventType found:', !!resEventType, resEventType ? `value: ${resEventType.value}` : '');
-        console.log('resEvent found:', !!resEvent);
-        
-        // Results - Auto-calculate points when names are entered
-        const resP1 = document.getElementById('res_p1');
-        const resP2 = document.getElementById('res_p2');
-        const resP3 = document.getElementById('res_p3');
-        const resP1Points = document.getElementById('res_p1_points');
-        const resP2Points = document.getElementById('res_p2_points');
-        const resP3Points = document.getElementById('res_p3_points');
-        
-        console.log('Name inputs found:', {
-          resP1: !!resP1,
-          resP2: !!resP2,
-          resP3: !!resP3
-        });
-        console.log('Points inputs found:', {
-          resP1Points: !!resP1Points,
-          resP2Points: !!resP2Points,
-          resP3Points: !!resP3Points
-        });
-        
-        // Track if points were manually edited (reset when name changes)
-        let manualP1 = false, manualP2 = false, manualP3 = false;
-      
-      if (resP1Points) {
-        resP1Points.oninput = () => { 
-          manualP1 = true; 
-          console.log('Manual edit detected for P1 points');
-        };
-      }
-      if (resP2Points) {
-        resP2Points.oninput = () => { 
-          manualP2 = true; 
-          console.log('Manual edit detected for P2 points');
-        };
-      }
-      if (resP3Points) {
-        resP3Points.oninput = () => { 
-          manualP3 = true; 
-          console.log('Manual edit detected for P3 points');
-        };
-      }
-      
-      function updatePoints() {
-        console.log('🔄 updatePoints() called');
-        
-        // Get fresh references to elements each time
-        const resEventTypeEl = document.getElementById('res_event_type');
-        const resP1El = document.getElementById('res_p1');
-        const resP2El = document.getElementById('res_p2');
-        const resP3El = document.getElementById('res_p3');
-        const resP1PointsEl = document.getElementById('res_p1_points');
-        const resP2PointsEl = document.getElementById('res_p2_points');
-        const resP3PointsEl = document.getElementById('res_p3_points');
-        
-        console.log('🔍 Element check:', {
-          resEventType: !!resEventTypeEl,
-          resP1: !!resP1El,
-          resP2: !!resP2El,
-          resP3: !!resP3El,
-          resP1Points: !!resP1PointsEl,
-          resP2Points: !!resP2PointsEl,
-          resP3Points: !!resP3PointsEl
-        });
-        
-        if (!resEventTypeEl) {
-          console.warn('❌ resEventType not found, cannot update points');
-          return;
-        }
-        
-        const eventType = resEventTypeEl.value || 'individual'; // Default to individual
-        const isGroup = eventType === 'group';
-        
-        console.log('📊 Event Type:', eventType, '| isGroup:', isGroup);
-        console.log('Name values:', {
-          p1: resP1El ? resP1El.value : 'N/A',
-          p2: resP2El ? resP2El.value : 'N/A',
-          p3: resP3El ? resP3El.value : 'N/A'
-        });
-        console.log('Manual flags:', { manualP1, manualP2, manualP3 });
-        
-        // Auto-fill points when name is entered (always update based on event type)
-        if (resP1El && resP1El.value.trim() && resP1PointsEl) {
-          const nameValue = resP1El.value.trim();
-          console.log('Checking P1 - has name:', nameValue, 'manualP1:', manualP1);
-          if (!manualP1) {
-            const points = isGroup ? '5' : '8';
-            resP1PointsEl.value = points;
-            // Force update by dispatching input event
-            resP1PointsEl.dispatchEvent(new Event('input', { bubbles: true }));
-            console.log('✅ Updated 1st place points to:', points, 'for name:', nameValue);
-            console.log('✅ Verified P1 points value:', resP1PointsEl.value);
-          } else {
-            console.log('⏭️ Skipping P1 points update (manually edited)');
-          }
-        } else {
-          console.log('⏭️ Skipping P1 - no name or element missing', {
-            hasResP1: !!resP1El,
-            hasValue: resP1El ? !!resP1El.value.trim() : false,
-            hasResP1Points: !!resP1PointsEl,
-            p1Value: resP1El ? resP1El.value : 'N/A'
-          });
-        }
-        
-        if (resP2El && resP2El.value.trim() && resP2PointsEl) {
-          const nameValue = resP2El.value.trim();
-          console.log('Checking P2 - has name:', nameValue, 'manualP2:', manualP2);
-          if (!manualP2) {
-            const points = isGroup ? '3' : '5';
-            resP2PointsEl.value = points;
-            resP2PointsEl.dispatchEvent(new Event('input', { bubbles: true }));
-            console.log('✅ Updated 2nd place points to:', points, 'for name:', nameValue);
-            console.log('✅ Verified P2 points value:', resP2PointsEl.value);
-          } else {
-            console.log('⏭️ Skipping P2 points update (manually edited)');
-          }
-        } else {
-          console.log('⏭️ Skipping P2 - no name or element missing', {
-            hasResP2: !!resP2El,
-            hasValue: resP2El ? !!resP2El.value.trim() : false,
-            hasResP2Points: !!resP2PointsEl,
-            p2Value: resP2El ? resP2El.value : 'N/A'
-          });
-        }
-        
-        if (resP3El && resP3El.value.trim() && resP3PointsEl) {
-          const nameValue = resP3El.value.trim();
-          console.log('Checking P3 - has name:', nameValue, 'manualP3:', manualP3);
-          if (!manualP3) {
-            const points = isGroup ? '1' : '3';
-            resP3PointsEl.value = points;
-            resP3PointsEl.dispatchEvent(new Event('input', { bubbles: true }));
-            console.log('✅ Updated 3rd place points to:', points, 'for name:', nameValue);
-            console.log('✅ Verified P3 points value:', resP3PointsEl.value);
-          } else {
-            console.log('⏭️ Skipping P3 points update (manually edited)');
-          }
-        } else {
-          console.log('⏭️ Skipping P3 - no name or element missing', {
-            hasResP3: !!resP3El,
-            hasValue: resP3El ? !!resP3El.value.trim() : false,
-            hasResP3Points: !!resP3PointsEl,
-            p3Value: resP3El ? resP3El.value : 'N/A'
-          });
-        }
-      }
-      
-      // Attach handlers for name inputs - reset manual flags when name changes
-      // Use multiple event types to catch both typing and datalist selection
-      if (resP1) {
-        console.log('✅ Attaching handler to resP1');
-        const handleP1Change = function() {
-          const currentValue = this.value;
-          console.log('📝 P1 name changed:', currentValue);
-          manualP1 = false; // Reset manual flag when name changes
-          // Use setTimeout to ensure value is set after datalist selection
-          setTimeout(() => {
-            console.log('🔄 Calling updatePoints() after P1 name change, current value:', this.value);
-            updatePoints();
-          }, 50);
-        };
-        resP1.oninput = handleP1Change;
-        resP1.onchange = handleP1Change;
-        resP1.addEventListener('input', handleP1Change);
-        resP1.addEventListener('change', handleP1Change);
-        // Also listen for blur in case user selects from datalist
-        resP1.addEventListener('blur', handleP1Change);
-      } else {
-        console.warn('⚠️ resP1 not found');
-      }
-      
-      if (resP2) {
-        console.log('✅ Attaching handler to resP2');
-        const handleP2Change = function() {
-          const currentValue = this.value;
-          console.log('📝 P2 name changed:', currentValue);
-          manualP2 = false; // Reset manual flag when name changes
-          setTimeout(() => {
-            console.log('🔄 Calling updatePoints() after P2 name change, current value:', this.value);
-            updatePoints();
-          }, 50);
-        };
-        resP2.oninput = handleP2Change;
-        resP2.onchange = handleP2Change;
-        resP2.addEventListener('input', handleP2Change);
-        resP2.addEventListener('change', handleP2Change);
-        resP2.addEventListener('blur', handleP2Change);
-      } else {
-        console.warn('⚠️ resP2 not found');
-      }
-      
-      if (resP3) {
-        console.log('✅ Attaching handler to resP3');
-        const handleP3Change = function() {
-          const currentValue = this.value;
-          console.log('📝 P3 name changed:', currentValue);
-          manualP3 = false; // Reset manual flag when name changes
-          setTimeout(() => {
-            console.log('🔄 Calling updatePoints() after P3 name change, current value:', this.value);
-            updatePoints();
-          }, 50);
-        };
-        resP3.oninput = handleP3Change;
-        resP3.onchange = handleP3Change;
-        resP3.addEventListener('input', handleP3Change);
-        resP3.addEventListener('change', handleP3Change);
-        resP3.addEventListener('blur', handleP3Change);
-      } else {
-        console.warn('⚠️ resP3 not found');
-      }
-      
-      // Update event dropdown and points when event type changes
-      if (resEventType && resEvent) {
-        console.log('✅ Attaching handler to resEventType');
-        console.log('resEventType element:', resEventType);
-        console.log('resEvent element:', resEvent);
-        
-        // Remove any existing handler first
-        resEventType.onchange = null;
-        
-        // Attach new handler
-        resEventType.onchange = function(e) {
-          console.log('🔄🔄🔄 Event type change event triggered!');
-          console.log('Event object:', e);
-          console.log('this.value:', this.value);
-          console.log('resEventType.value:', resEventType.value);
-          
-          const eventType = this.value || resEventType.value;
-          const currentValue = resEvent ? resEvent.value : '';
-          
-          console.log('🔄 Event type changed to:', eventType);
-          console.log('Current event selection:', currentValue);
-          
-          // Filter events based on type
-          const filteredEvents = EVENTS.filter(e => {
-            if (eventType === 'group') {
-              return e.isGroup === true;
-            } else {
-              return e.isGroup === false;
-            }
-          });
-          
-          console.log('Total EVENTS:', EVENTS.length);
-          console.log('Filtered events count:', filteredEvents.length);
-          console.log('Filtered events:', filteredEvents.map(e => e.name));
-          
-          if (resEvent) {
-            // Update dropdown options with a default option
-            const defaultOption = '<option value="">-- Select Event --</option>';
-            const optionsHtml = defaultOption + filteredEvents.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
-            console.log('Updating event dropdown with', filteredEvents.length, 'options');
-            resEvent.innerHTML = optionsHtml;
-            
-            // Try to maintain selection if still available
-            if (currentValue && filteredEvents.find(e => e.id === currentValue)) {
-              resEvent.value = currentValue;
-              console.log('Maintained previous selection:', currentValue);
-            } else if (filteredEvents.length > 0) {
-              // Don't auto-select, let user choose
-              resEvent.value = '';
-              console.log('Cleared selection, user should choose from', filteredEvents.length, 'available events');
-            } else {
-              resEvent.value = '';
-              console.warn('No events available for type:', eventType);
-            }
-            
-            // Force a visual update by triggering a change event on the event dropdown
-            resEvent.dispatchEvent(new Event('change'));
-            console.log('✅ Event dropdown updated and change event dispatched');
-          } else {
-            console.error('resEvent not found when trying to update');
-          }
-          
-          // Update points when event type changes
-          console.log('Calling updatePoints() after event type change');
-          updatePoints();
-        };
-        
-        // Also try addEventListener as backup
-        resEventType.addEventListener('change', function(e) {
-          console.log('🔄🔄🔄 Event type change (addEventListener) triggered!');
-          const eventType = this.value;
-          console.log('Event type from addEventListener:', eventType);
-          
-          if (resEvent) {
-            const filteredEvents = EVENTS.filter(e => {
-              if (eventType === 'group') {
-                return e.isGroup === true;
-              } else {
-                return e.isGroup === false;
-              }
-            });
-            
-            const defaultOption = '<option value="">-- Select Event --</option>';
-            resEvent.innerHTML = defaultOption + filteredEvents.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
-            resEvent.value = '';
-            resEvent.dispatchEvent(new Event('change'));
-            updatePoints();
-          }
-        });
-        
-        // Trigger initial filter
-        console.log('Triggering initial event type change');
-        console.log('Current resEventType value before trigger:', resEventType.value);
-        resEventType.dispatchEvent(new Event('change'));
-        console.log('Initial event type change triggered');
-      } else {
-        console.warn('⚠️ resEventType or resEvent not found, cannot set up event filtering');
-        console.warn('resEventType:', !!resEventType, 'resEvent:', !!resEvent);
-      }
-      
-        console.log('✅ Results Entry handlers setup complete');
-      }
-      
-      // Results - Save handler (always check, not just when tab is results)
-      const saveRes = document.getElementById('save_results');
-      if (saveRes) {
-        saveRes.onclick = async () => {
-          const resEvent = document.getElementById('res_event');
-          const resEventType = document.getElementById('res_event_type');
-          const resP1 = document.getElementById('res_p1');
-          const resP2 = document.getElementById('res_p2');
-          const resP3 = document.getElementById('res_p3');
-          const resP1Points = document.getElementById('res_p1_points');
-          const resP2Points = document.getElementById('res_p2_points');
-          const resP3Points = document.getElementById('res_p3_points');
-          
-          const event_id = resEvent ? resEvent.value : '';
-          const eventType = resEventType ? resEventType.value : 'individual';
-          const isGroup = eventType === 'group';
-          const p1 = resP1 ? resP1.value.trim() : '';
-          const p2 = resP2 ? resP2.value.trim() : '';
-          const p3 = resP3 ? resP3.value.trim() : '';
-          const p1pts = resP1Points ? resP1Points.value : '';
-          const p2pts = resP2Points ? resP2Points.value : '';
-          const p3pts = resP3Points ? resP3Points.value : '';
-          
-          try {
-            for (const obj of [
-              {name:p1, place:1, pts:p1pts},
-              {name:p2, place:2, pts:p2pts},
-              {name:p3, place:3, pts:p3pts}
-            ]) {
-              if (!obj.name) continue;
-              const existing = state.participants.find(pp => pp.name.toLowerCase() === obj.name.toLowerCase());
-              if (!existing) throw 'Participant not found: ' + obj.name;
-              
-              // Calculate points if not provided, using event type
-              let points = obj.pts ? parseInt(obj.pts, 10) : computePoints(event_id, obj.place, isGroup);
-              
-              await addResult({
-                event_id,
-                participant_id: existing.id,
-                placement: obj.place,
-                points: points
-              });
-            }
-            showToast('Placements saved successfully!', 'success');
-            await loadData();
-            render();
-            afterRender();
-          } catch(e) {
-            showToast('Error: ' + e, 'error');
-          }
-        };
-      }
 
-      const showBtn = document.getElementById('show_event_participants');
-      if (showBtn) {
-        showBtn.onclick = () => {
-          const ev = document.getElementById('helper_event').value;
-          const list = state.participants.filter(p => (p.events || []).includes(ev));
-          const helperList = document.getElementById('helper_list');
-          if (helperList) {
-            helperList.innerHTML = `
+            function setupResultsHandlers() {
+                console.log('🔧🔧🔧 setupResultsHandlers() FUNCTION CALLED!');
+                console.log('🔧 Setting up Results Entry handlers...');
+                const resEventType = document.getElementById('res_event_type');
+                const resEvent = document.getElementById('res_event');
+
+                console.log('resEventType found:', !!resEventType, resEventType ? `value: ${resEventType.value}` : '');
+                console.log('resEvent found:', !!resEvent);
+
+                // Results - Auto-calculate points when names are entered
+                const resP1 = document.getElementById('res_p1');
+                const resP2 = document.getElementById('res_p2');
+                const resP3 = document.getElementById('res_p3');
+                const resP1Points = document.getElementById('res_p1_points');
+                const resP2Points = document.getElementById('res_p2_points');
+                const resP3Points = document.getElementById('res_p3_points');
+
+                console.log('Name inputs found:', {
+                    resP1: !!resP1,
+                    resP2: !!resP2,
+                    resP3: !!resP3
+                });
+                console.log('Points inputs found:', {
+                    resP1Points: !!resP1Points,
+                    resP2Points: !!resP2Points,
+                    resP3Points: !!resP3Points
+                });
+
+                // Track if points were manually edited (reset when name changes)
+                let manualP1 = false, manualP2 = false, manualP3 = false;
+
+                if (resP1Points) {
+                    resP1Points.oninput = () => {
+                        manualP1 = true;
+                        console.log('Manual edit detected for P1 points');
+                    };
+                }
+                if (resP2Points) {
+                    resP2Points.oninput = () => {
+                        manualP2 = true;
+                        console.log('Manual edit detected for P2 points');
+                    };
+                }
+                if (resP3Points) {
+                    resP3Points.oninput = () => {
+                        manualP3 = true;
+                        console.log('Manual edit detected for P3 points');
+                    };
+                }
+
+                function updatePoints() {
+                    console.log('🔄 updatePoints() called');
+
+                    // Get fresh references to elements each time
+                    const resEventTypeEl = document.getElementById('res_event_type');
+                    const resP1El = document.getElementById('res_p1');
+                    const resP2El = document.getElementById('res_p2');
+                    const resP3El = document.getElementById('res_p3');
+                    const resP1PointsEl = document.getElementById('res_p1_points');
+                    const resP2PointsEl = document.getElementById('res_p2_points');
+                    const resP3PointsEl = document.getElementById('res_p3_points');
+
+                    console.log('🔍 Element check:', {
+                        resEventType: !!resEventTypeEl,
+                        resP1: !!resP1El,
+                        resP2: !!resP2El,
+                        resP3: !!resP3El,
+                        resP1Points: !!resP1PointsEl,
+                        resP2Points: !!resP2PointsEl,
+                        resP3Points: !!resP3PointsEl
+                    });
+
+                    if (!resEventTypeEl) {
+                        console.warn('❌ resEventType not found, cannot update points');
+                        return;
+                    }
+
+                    const eventType = resEventTypeEl.value || 'individual'; // Default to individual
+                    const isGroup = eventType === 'group';
+
+                    console.log('📊 Event Type:', eventType, '| isGroup:', isGroup);
+                    console.log('Name values:', {
+                        p1: resP1El ? resP1El.value : 'N/A',
+                        p2: resP2El ? resP2El.value : 'N/A',
+                        p3: resP3El ? resP3El.value : 'N/A'
+                    });
+                    console.log('Manual flags:', { manualP1, manualP2, manualP3 });
+
+                    // Auto-fill points when name is entered (always update based on event type)
+                    if (resP1El && resP1El.value.trim() && resP1PointsEl) {
+                        const nameValue = resP1El.value.trim();
+                        console.log('Checking P1 - has name:', nameValue, 'manualP1:', manualP1);
+                        if (!manualP1) {
+                            const points = isGroup ? '5' : '8';
+                            resP1PointsEl.value = points;
+                            // Force update by dispatching input event
+                            resP1PointsEl.dispatchEvent(new Event('input', { bubbles: true }));
+                            console.log('✅ Updated 1st place points to:', points, 'for name:', nameValue);
+                            console.log('✅ Verified P1 points value:', resP1PointsEl.value);
+                        } else {
+                            console.log('⏭️ Skipping P1 points update (manually edited)');
+                        }
+                    } else {
+                        console.log('⏭️ Skipping P1 - no name or element missing', {
+                            hasResP1: !!resP1El,
+                            hasValue: resP1El ? !!resP1El.value.trim() : false,
+                            hasResP1Points: !!resP1PointsEl,
+                            p1Value: resP1El ? resP1El.value : 'N/A'
+                        });
+                    }
+
+                    if (resP2El && resP2El.value.trim() && resP2PointsEl) {
+                        const nameValue = resP2El.value.trim();
+                        console.log('Checking P2 - has name:', nameValue, 'manualP2:', manualP2);
+                        if (!manualP2) {
+                            const points = isGroup ? '3' : '5';
+                            resP2PointsEl.value = points;
+                            resP2PointsEl.dispatchEvent(new Event('input', { bubbles: true }));
+                            console.log('✅ Updated 2nd place points to:', points, 'for name:', nameValue);
+                            console.log('✅ Verified P2 points value:', resP2PointsEl.value);
+                        } else {
+                            console.log('⏭️ Skipping P2 points update (manually edited)');
+                        }
+                    } else {
+                        console.log('⏭️ Skipping P2 - no name or element missing', {
+                            hasResP2: !!resP2El,
+                            hasValue: resP2El ? !!resP2El.value.trim() : false,
+                            hasResP2Points: !!resP2PointsEl,
+                            p2Value: resP2El ? resP2El.value : 'N/A'
+                        });
+                    }
+
+                    if (resP3El && resP3El.value.trim() && resP3PointsEl) {
+                        const nameValue = resP3El.value.trim();
+                        console.log('Checking P3 - has name:', nameValue, 'manualP3:', manualP3);
+                        if (!manualP3) {
+                            const points = isGroup ? '1' : '3';
+                            resP3PointsEl.value = points;
+                            resP3PointsEl.dispatchEvent(new Event('input', { bubbles: true }));
+                            console.log('✅ Updated 3rd place points to:', points, 'for name:', nameValue);
+                            console.log('✅ Verified P3 points value:', resP3PointsEl.value);
+                        } else {
+                            console.log('⏭️ Skipping P3 points update (manually edited)');
+                        }
+                    } else {
+                        console.log('⏭️ Skipping P3 - no name or element missing', {
+                            hasResP3: !!resP3El,
+                            hasValue: resP3El ? !!resP3El.value.trim() : false,
+                            hasResP3Points: !!resP3PointsEl,
+                            p3Value: resP3El ? resP3El.value : 'N/A'
+                        });
+                    }
+                }
+
+                // Attach handlers for name inputs - reset manual flags when name changes
+                // Use multiple event types to catch both typing and datalist selection
+                if (resP1) {
+                    console.log('✅ Attaching handler to resP1');
+                    const handleP1Change = function () {
+                        const currentValue = this.value;
+                        console.log('📝 P1 name changed:', currentValue);
+                        manualP1 = false; // Reset manual flag when name changes
+                        // Use setTimeout to ensure value is set after datalist selection
+                        setTimeout(() => {
+                            console.log('🔄 Calling updatePoints() after P1 name change, current value:', this.value);
+                            updatePoints();
+                        }, 50);
+                    };
+                    resP1.oninput = handleP1Change;
+                    resP1.onchange = handleP1Change;
+                    resP1.addEventListener('input', handleP1Change);
+                    resP1.addEventListener('change', handleP1Change);
+                    // Also listen for blur in case user selects from datalist
+                    resP1.addEventListener('blur', handleP1Change);
+                } else {
+                    console.warn('⚠️ resP1 not found');
+                }
+
+                if (resP2) {
+                    console.log('✅ Attaching handler to resP2');
+                    const handleP2Change = function () {
+                        const currentValue = this.value;
+                        console.log('📝 P2 name changed:', currentValue);
+                        manualP2 = false; // Reset manual flag when name changes
+                        setTimeout(() => {
+                            console.log('🔄 Calling updatePoints() after P2 name change, current value:', this.value);
+                            updatePoints();
+                        }, 50);
+                    };
+                    resP2.oninput = handleP2Change;
+                    resP2.onchange = handleP2Change;
+                    resP2.addEventListener('input', handleP2Change);
+                    resP2.addEventListener('change', handleP2Change);
+                    resP2.addEventListener('blur', handleP2Change);
+                } else {
+                    console.warn('⚠️ resP2 not found');
+                }
+
+                if (resP3) {
+                    console.log('✅ Attaching handler to resP3');
+                    const handleP3Change = function () {
+                        const currentValue = this.value;
+                        console.log('📝 P3 name changed:', currentValue);
+                        manualP3 = false; // Reset manual flag when name changes
+                        setTimeout(() => {
+                            console.log('🔄 Calling updatePoints() after P3 name change, current value:', this.value);
+                            updatePoints();
+                        }, 50);
+                    };
+                    resP3.oninput = handleP3Change;
+                    resP3.onchange = handleP3Change;
+                    resP3.addEventListener('input', handleP3Change);
+                    resP3.addEventListener('change', handleP3Change);
+                    resP3.addEventListener('blur', handleP3Change);
+                } else {
+                    console.warn('⚠️ resP3 not found');
+                }
+
+                // Update event dropdown and points when event type changes
+                if (resEventType && resEvent) {
+                    console.log('✅ Attaching handler to resEventType');
+                    console.log('resEventType element:', resEventType);
+                    console.log('resEvent element:', resEvent);
+
+                    // Remove any existing handler first
+                    resEventType.onchange = null;
+
+                    // Attach new handler
+                    resEventType.onchange = function (e) {
+                        console.log('🔄🔄🔄 Event type change event triggered!');
+                        console.log('Event object:', e);
+                        console.log('this.value:', this.value);
+                        console.log('resEventType.value:', resEventType.value);
+
+                        const eventType = this.value || resEventType.value;
+                        const currentValue = resEvent ? resEvent.value : '';
+
+                        console.log('🔄 Event type changed to:', eventType);
+                        console.log('Current event selection:', currentValue);
+
+                        // Filter events based on type
+                        const filteredEvents = EVENTS.filter(e => {
+                            if (eventType === 'group') {
+                                return e.isGroup === true;
+                            } else {
+                                return e.isGroup === false;
+                            }
+                        });
+
+                        console.log('Total EVENTS:', EVENTS.length);
+                        console.log('Filtered events count:', filteredEvents.length);
+                        console.log('Filtered events:', filteredEvents.map(e => e.name));
+
+                        if (resEvent) {
+                            // Update dropdown options with a default option
+                            const defaultOption = '<option value="">-- Select Event --</option>';
+                            const optionsHtml = defaultOption + filteredEvents.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+                            console.log('Updating event dropdown with', filteredEvents.length, 'options');
+                            resEvent.innerHTML = optionsHtml;
+
+                            // Try to maintain selection if still available
+                            if (currentValue && filteredEvents.find(e => e.id === currentValue)) {
+                                resEvent.value = currentValue;
+                                console.log('Maintained previous selection:', currentValue);
+                            } else if (filteredEvents.length > 0) {
+                                // Don't auto-select, let user choose
+                                resEvent.value = '';
+                                console.log('Cleared selection, user should choose from', filteredEvents.length, 'available events');
+                            } else {
+                                resEvent.value = '';
+                                console.warn('No events available for type:', eventType);
+                            }
+
+                            // Force a visual update by triggering a change event on the event dropdown
+                            resEvent.dispatchEvent(new Event('change'));
+                            console.log('✅ Event dropdown updated and change event dispatched');
+                        } else {
+                            console.error('resEvent not found when trying to update');
+                        }
+
+                        // Update points when event type changes
+                        console.log('Calling updatePoints() after event type change');
+                        updatePoints();
+                    };
+
+                    // Also try addEventListener as backup
+                    resEventType.addEventListener('change', function (e) {
+                        console.log('🔄🔄🔄 Event type change (addEventListener) triggered!');
+                        const eventType = this.value;
+                        console.log('Event type from addEventListener:', eventType);
+
+                        if (resEvent) {
+                            const filteredEvents = EVENTS.filter(e => {
+                                if (eventType === 'group') {
+                                    return e.isGroup === true;
+                                } else {
+                                    return e.isGroup === false;
+                                }
+                            });
+
+                            const defaultOption = '<option value="">-- Select Event --</option>';
+                            resEvent.innerHTML = defaultOption + filteredEvents.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+                            resEvent.value = '';
+                            resEvent.dispatchEvent(new Event('change'));
+                            updatePoints();
+                        }
+                    });
+
+                    // Trigger initial filter
+                    console.log('Triggering initial event type change');
+                    console.log('Current resEventType value before trigger:', resEventType.value);
+                    resEventType.dispatchEvent(new Event('change'));
+                    console.log('Initial event type change triggered');
+                } else {
+                    console.warn('⚠️ resEventType or resEvent not found, cannot set up event filtering');
+                    console.warn('resEventType:', !!resEventType, 'resEvent:', !!resEvent);
+                }
+
+                console.log('✅ Results Entry handlers setup complete');
+            }
+
+            // Results - Save handler (always check, not just when tab is results)
+            const saveRes = document.getElementById('save_results');
+            if (saveRes) {
+                saveRes.onclick = async () => {
+                    const resEvent = document.getElementById('res_event');
+                    const resEventType = document.getElementById('res_event_type');
+                    const resP1 = document.getElementById('res_p1');
+                    const resP2 = document.getElementById('res_p2');
+                    const resP3 = document.getElementById('res_p3');
+                    const resP1Points = document.getElementById('res_p1_points');
+                    const resP2Points = document.getElementById('res_p2_points');
+                    const resP3Points = document.getElementById('res_p3_points');
+
+                    const event_id = resEvent ? resEvent.value : '';
+                    const eventType = resEventType ? resEventType.value : 'individual';
+                    const isGroup = eventType === 'group';
+                    const p1 = resP1 ? resP1.value.trim() : '';
+                    const p2 = resP2 ? resP2.value.trim() : '';
+                    const p3 = resP3 ? resP3.value.trim() : '';
+                    const p1pts = resP1Points ? resP1Points.value : '';
+                    const p2pts = resP2Points ? resP2Points.value : '';
+                    const p3pts = resP3Points ? resP3Points.value : '';
+
+                    try {
+                        for (const obj of [
+                            { name: p1, place: 1, pts: p1pts },
+                            { name: p2, place: 2, pts: p2pts },
+                            { name: p3, place: 3, pts: p3pts }
+                        ]) {
+                            if (!obj.name) continue;
+                            const existing = state.participants.find(pp => pp.name.toLowerCase() === obj.name.toLowerCase());
+                            if (!existing) throw 'Participant not found: ' + obj.name;
+
+                            // Calculate points if not provided, using event type
+                            let points = obj.pts ? parseInt(obj.pts, 10) : computePoints(event_id, obj.place, isGroup);
+
+                            await addResult({
+                                event_id,
+                                participant_id: existing.id,
+                                placement: obj.place,
+                                points: points
+                            });
+                        }
+                        showToast('Placements saved successfully!', 'success');
+                        await loadData();
+                        render();
+                        afterRender();
+                    } catch (e) {
+                        showToast('Error: ' + e, 'error');
+                    }
+                };
+            }
+
+            const showBtn = document.getElementById('show_event_participants');
+            if (showBtn) {
+                showBtn.onclick = () => {
+                    const ev = document.getElementById('helper_event').value;
+                    const list = state.participants.filter(p => (p.events || []).includes(ev));
+                    const helperList = document.getElementById('helper_list');
+                    if (helperList) {
+                        helperList.innerHTML = `
               <div class="list">
                 ${list.map(pp => `
                   <div class="item">
@@ -1931,361 +2176,361 @@
                 `).join('')}
               </div>
             `;
-            document.querySelectorAll('[data-add]').forEach(b => {
-              b.onclick = () => {
-                document.getElementById('res_p1').value = b.getAttribute('data-add');
-              };
-            });
-          }
-        };
-      }
-
-      document.querySelectorAll('[data-rid]').forEach(b => {
-        b.onclick = () => {
-          const rid = b.getAttribute('data-rid');
-          if (confirm('Delete result?')) {
-            if (supabase && CONFIG.USE_SUPABASE) {
-              supabase.from('results').delete().eq('id', rid).then(() => {
-                loadData().then(() => render());
-              });
-            } else {
-              state.results = state.results.filter(r => r.id !== rid);
-              saveLocal();
-              render();
+                        document.querySelectorAll('[data-add]').forEach(b => {
+                            b.onclick = () => {
+                                document.getElementById('res_p1').value = b.getAttribute('data-add');
+                            };
+                        });
+                    }
+                };
             }
-          }
-        };
-      });
 
-      // Leaderboard
-      const exportBtn = document.getElementById('export_xls');
-      if (exportBtn) exportBtn.onclick = () => exportLeaderboardXls();
-
-      // Admin
-      const dlBtn = document.getElementById('download_json');
-      if (dlBtn) {
-        dlBtn.onclick = () => {
-          const data = {participants:state.participants, results:state.results};
-          const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'cc_data.json';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-        };
-      }
-
-      const clearBtn = document.getElementById('clear_data');
-      if (clearBtn) {
-        clearBtn.onclick = () => {
-          if (confirm('Clear all local data?')) {
-            state.participants = [];
-            state.results = [];
-            saveLocal();
-            render();
-          }
-        };
-      }
-
-      const testConnBtn = document.getElementById('test_connection');
-      if (testConnBtn) {
-        testConnBtn.onclick = async () => {
-          const result = await testSupabaseConnection();
-          alert(result ? 'Connection successful!' : 'Connection failed. Check console for details.');
-        };
-      }
-
-      const logoutBtn = document.getElementById('logout');
-      if (logoutBtn) logoutBtn.onclick = () => { logout(); };
-
-      // Edit/Delete participants
-      document.querySelectorAll('[data-edit]').forEach(b => {
-        b.onclick = () => openEditParticipant(b.getAttribute('data-edit'));
-      });
-      document.querySelectorAll('[data-del]').forEach(b => {
-        b.onclick = () => {
-          if (confirm('Delete?')) {
-            deleteParticipant(b.getAttribute('data-del')).then(() => {
-              loadData().then(() => render());
+            document.querySelectorAll('[data-rid]').forEach(b => {
+                b.onclick = () => {
+                    const rid = b.getAttribute('data-rid');
+                    if (confirm('Delete result?')) {
+                        if (supabaseClient && CONFIG.USE_SUPABASE) {
+                            supabaseClient.from('results').delete().eq('id', rid).then(() => {
+                                loadData().then(() => render());
+                            });
+                        } else {
+                            state.results = state.results.filter(r => r.id !== rid);
+                            saveLocal();
+                            render();
+                        }
+                    }
+                };
             });
-          }
-        };
-      });
-    }
 
-    // ==================== AUTH ====================
-    async function tryLogin(email, password) {
-      if (!supabase) {
-        console.error('Supabase not initialized');
-        return false;
-      }
-      
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
-        
-        if (error) {
-          console.error('Login error:', error);
-          return false;
-        }
-        
-        // Store user session
-        state.user = {
-          id: data.user.id,
-          email: data.user.email,
-          username: data.user.email.split('@')[0] // Extract username from email
-        };
-        localStorage.setItem(LS_KEYS.USER, JSON.stringify(state.user));
-        console.log('✅ Login successful:', state.user.email);
-        return true;
-      } catch (err) {
-        console.error('Login failed:', err);
-        return false;
-      }
-    }
+            // Leaderboard
+            const exportBtn = document.getElementById('export_xls');
+            if (exportBtn) exportBtn.onclick = () => exportLeaderboardXls();
 
-    async function logout() {
-      if (supabase) {
-        try {
-          await supabase.auth.signOut();
-          console.log('✅ Signed out from Supabase');
-        } catch (err) {
-          console.error('Logout error:', err);
-        }
-      }
-      state.user = null;
-      // Clear user from localStorage
-      localStorage.removeItem(LS_KEYS.USER);
-      render();
-    }
-    
-    async function loadUserFromStorage() {
-      // First try Supabase session
-      if (supabase && CONFIG.USE_SUPABASE) {
-        try {
-          const { data: { session }, error } = await supabase.auth.getSession();
-          if (error) {
-            console.warn('Session check error:', error);
-          } else if (session && session.user) {
-            state.user = {
-              id: session.user.id,
-              email: session.user.email,
-              username: session.user.email.split('@')[0]
-            };
-            localStorage.setItem(LS_KEYS.USER, JSON.stringify(state.user));
-            console.log('✅ Restored Supabase session:', state.user.email);
-            return true;
-          }
-        } catch (err) {
-          console.warn('Failed to check Supabase session:', err);
-        }
-      }
-      
-      // Fallback to localStorage (for demo mode)
-      try {
-        const savedUser = localStorage.getItem(LS_KEYS.USER);
-        if (savedUser) {
-          state.user = JSON.parse(savedUser);
-          return true;
-        }
-      } catch(e) {
-        console.warn('Failed to load user from storage:', e);
-        localStorage.removeItem(LS_KEYS.USER);
-      }
-      return false;
-    }
-    
-    // Check for existing Supabase Auth session
-    async function checkSupabaseSession() {
-      if (!supabase) return false;
-      
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) {
-          console.warn('Session check error:', error);
-          return false;
-        }
-        
-        if (session && session.user) {
-          state.user = {
-            id: session.user.id,
-            email: session.user.email,
-            username: session.user.email.split('@')[0]
-          };
-          localStorage.setItem(LS_KEYS.USER, JSON.stringify(state.user));
-          console.log('✅ Restored Supabase session');
-          return true;
-        }
-      } catch (err) {
-        console.warn('Failed to check session:', err);
-      }
-      
-      return false;
-    }
+            // Admin
+            const dlBtn = document.getElementById('download_json');
+            if (dlBtn) {
+                dlBtn.onclick = () => {
+                    const data = { participants: state.participants, results: state.results };
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'cc_data.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                };
+            }
 
-    // ==================== DATA LOADING ====================
-    async function loadData() {
-      console.log('📥 loadData() called');
-      console.log('Supabase status:', {hasSupabase: !!supabase, useSupabase: CONFIG.USE_SUPABASE});
-      
-      if (!supabase && CONFIG.USE_SUPABASE) {
-        console.log('Initializing Supabase...');
-        initSupabase();
-      }
-      
-      if (supabase && CONFIG.USE_SUPABASE) {
-        console.log('🔄 Loading data from Supabase...');
-        try {
-          const parts = await sb_getParticipants();
-          const res = await sb_getResults();
-          state.participants = parts ? parts.map(p => ({...p})) : [];
-          state.results = res ? res.map(r => ({...r})) : [];
-          console.log(`✅ Loaded ${state.participants.length} participants and ${state.results.length} results from Supabase`);
-          return;
-        } catch(e) {
-          console.error('❌ Supabase load failed, falling back to localStorage:', e);
-          loadLocal();
-          return;
-        }
-      }
-      
-      console.log('📦 Loading data from localStorage (Supabase not available or disabled)');
-      loadLocal();
-    }
+            const clearBtn = document.getElementById('clear_data');
+            if (clearBtn) {
+                clearBtn.onclick = () => {
+                    if (confirm('Clear all local data?')) {
+                        state.participants = [];
+                        state.results = [];
+                        saveLocal();
+                        render();
+                    }
+                };
+            }
 
-    async function testSupabaseConnection() {
-      if (!supabase) {
-        console.error('Supabase client not initialized');
-        return false;
-      }
-      try {
-        const {data, error} = await supabase.from('participants').select('id').limit(1);
-        if (error) {
-          console.error('Supabase connection test failed:', error);
-          return false;
-        }
-        console.log('✓ Supabase connection test successful');
-        return true;
-      } catch(err) {
-        console.warn('Supabase connection test error:', err);
-        return false;
-      }
-    }
+            const testConnBtn = document.getElementById('test_connection');
+            if (testConnBtn) {
+                testConnBtn.onclick = async () => {
+                    const result = await testSupabaseConnection();
+                    alert(result ? 'Connection successful!' : 'Connection failed. Check console for details.');
+                };
+            }
 
-    function openEditParticipant(id) {
-      const p = state.participants.find(x => x.id === id);
-      if (!p) {
-        showToast('Participant not found', 'error');
-        return;
-      }
-      
-      // Populate Quick Add form
-      document.getElementById('qa_edit_id').value = id;
-      document.getElementById('qa_name').value = p.name || '';
-      document.getElementById('qa_team').value = p.team || 'Phoenix';
-      document.getElementById('qa_class').value = p.class || '';
-      document.getElementById('qa_gender').value = p.gender || '';
-      // Only populate chest number if participant has one, otherwise leave empty for refresh button
-      const chestInput = document.getElementById('qa_chest');
-      const refreshBtn = document.getElementById('qa_chest_refresh');
-      const chestNo = p.chest_no ? String(p.chest_no).trim() : '';
-      
-      if (chestNo) {
-        // Participant has chest number - set it and hide refresh button
-        chestInput.value = chestNo;
-        if (refreshBtn) {
-          refreshBtn.style.display = 'none';
-        }
-      } else {
-        // Participant has no chest number - leave empty and show refresh button
-        chestInput.value = '';
-        if (refreshBtn) {
-          refreshBtn.style.display = 'inline-block';
-        }
-      }
-      
-      // Select events in multiselect
-      const eventsSelect = document.getElementById('qa_events');
-      Array.from(eventsSelect.options).forEach(opt => {
-        opt.selected = (p.events || []).includes(opt.value);
-      });
-      
-      // Update UI
-      document.getElementById('qa_title').textContent = 'Edit Participant';
-      document.getElementById('qa_add').textContent = 'Update Participant';
-      document.getElementById('qa_cancel').style.display = 'inline-block';
-      
-      // Scroll to form
-      document.getElementById('qa_name').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      document.getElementById('qa_name').focus();
-    }
-    
-    function clearQuickAddForm() {
-      document.getElementById('qa_edit_id').value = '';
-      document.getElementById('qa_name').value = '';
-      document.getElementById('qa_team').value = 'Phoenix';
-      document.getElementById('qa_class').value = '';
-      document.getElementById('qa_gender').value = '';
-      document.getElementById('qa_chest').value = '';
-      const eventsSelect = document.getElementById('qa_events');
-      if (eventsSelect) eventsSelect.selectedIndex = -1;
-      document.getElementById('qa_title').textContent = 'Quick Add';
-      document.getElementById('qa_add').textContent = 'Add Participant';
-      document.getElementById('qa_cancel').style.display = 'none';
-      // Update refresh button visibility
-      if (typeof updateChestRefreshVisibility === 'function') {
-        updateChestRefreshVisibility();
-      }
-    }
-    
-    function showToast(message, type = 'success') {
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        toast.style.animation = 'slideIn 0.3s ease-out reverse';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
+            const logoutBtn = document.getElementById('logout');
+            if (logoutBtn) logoutBtn.onclick = () => { logout(); };
 
-    // ==================== INITIALIZATION ====================
-    async function init() {
-      // Initialize Supabase first
-      if (CONFIG.USE_SUPABASE && !supabase) {
-        initSupabase();
-      }
-      
-      // Load user from storage (will prioritize Supabase session if available)
-      const userLoaded = await loadUserFromStorage();
-      if (userLoaded) {
-        console.log('User loaded:', state.user);
-      }
-      
-      render();
-      afterRender();
-      if (supabase && CONFIG.USE_SUPABASE) {
-        testSupabaseConnection().catch(() => {});
-      }
-      if (state.user) {
-        await loadData();
-        render();
-        afterRender();
-      }
-    }
+            // Edit/Delete participants
+            document.querySelectorAll('[data-edit]').forEach(b => {
+                b.onclick = () => openEditParticipant(b.getAttribute('data-edit'));
+            });
+            document.querySelectorAll('[data-del]').forEach(b => {
+                b.onclick = () => {
+                    if (confirm('Delete?')) {
+                        deleteParticipant(b.getAttribute('data-del')).then(() => {
+                            loadData().then(() => render());
+                        });
+                    }
+                };
+            });
+        }
 
-    // Start app when DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
-  </script>
+        // ==================== AUTH ====================
+        async function tryLogin(email, password) {
+            if (!supabaseClient) {
+                console.error('Supabase not initialized');
+                return false;
+            }
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    console.error('Login error:', error);
+                    return false;
+                }
+
+                // Store user session
+                state.user = {
+                    id: data.user.id,
+                    email: data.user.email,
+                    username: data.user.email.split('@')[0] // Extract username from email
+                };
+                localStorage.setItem(LS_KEYS.USER, JSON.stringify(state.user));
+                console.log('✅ Login successful:', state.user.email);
+                return true;
+            } catch (err) {
+                console.error('Login failed:', err);
+                return false;
+            }
+        }
+
+        async function logout() {
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.auth.signOut();
+                    console.log('✅ Signed out from Supabase');
+                } catch (err) {
+                    console.error('Logout error:', err);
+                }
+            }
+            state.user = null;
+            // Clear user from localStorage
+            localStorage.removeItem(LS_KEYS.USER);
+            render();
+        }
+
+        async function loadUserFromStorage() {
+            // First try Supabase session
+            if (supabaseClient && CONFIG.USE_SUPABASE) {
+                try {
+                    const { data: { session }, error } = await supabaseClient.auth.getSession();
+                    if (error) {
+                        console.warn('Session check error:', error);
+                    } else if (session && session.user) {
+                        state.user = {
+                            id: session.user.id,
+                            email: session.user.email,
+                            username: session.user.email.split('@')[0]
+                        };
+                        localStorage.setItem(LS_KEYS.USER, JSON.stringify(state.user));
+                        console.log('✅ Restored Supabase session:', state.user.email);
+                        return true;
+                    }
+                } catch (err) {
+                    console.warn('Failed to check Supabase session:', err);
+                }
+            }
+
+            // Fallback to localStorage (for demo mode)
+            try {
+                const savedUser = localStorage.getItem(LS_KEYS.USER);
+                if (savedUser) {
+                    state.user = JSON.parse(savedUser);
+                    return true;
+                }
+            } catch (e) {
+                console.warn('Failed to load user from storage:', e);
+                localStorage.removeItem(LS_KEYS.USER);
+            }
+            return false;
+        }
+
+        // Check for existing Supabase Auth session
+        async function checkSupabaseSession() {
+            if (!supabaseClient) return false;
+
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                if (error) {
+                    console.warn('Session check error:', error);
+                    return false;
+                }
+
+                if (session && session.user) {
+                    state.user = {
+                        id: session.user.id,
+                        email: session.user.email,
+                        username: session.user.email.split('@')[0]
+                    };
+                    localStorage.setItem(LS_KEYS.USER, JSON.stringify(state.user));
+                    console.log('✅ Restored Supabase session');
+                    return true;
+                }
+            } catch (err) {
+                console.warn('Failed to check session:', err);
+            }
+
+            return false;
+        }
+
+        // ==================== DATA LOADING ====================
+        async function loadData() {
+            console.log('📥 loadData() called');
+            console.log('Supabase status:', { hasSupabase: !!supabaseClient, useSupabase: CONFIG.USE_SUPABASE });
+
+            if (!supabaseClient && CONFIG.USE_SUPABASE) {
+                console.log('Initializing Supabase...');
+                initSupabase();
+            }
+
+            if (supabaseClient && CONFIG.USE_SUPABASE) {
+                console.log('🔄 Loading data from Supabase...');
+                try {
+                    const parts = await sb_getParticipants();
+                    const res = await sb_getResults();
+                    state.participants = parts ? parts.map(p => ({ ...p })) : [];
+                    state.results = res ? res.map(r => ({ ...r })) : [];
+                    console.log(`✅ Loaded ${state.participants.length} participants and ${state.results.length} results from Supabase`);
+                    return;
+                } catch (e) {
+                    console.error('❌ Supabase load failed, falling back to localStorage:', e);
+                    loadLocal();
+                    return;
+                }
+            }
+
+            console.log('📦 Loading data from localStorage (Supabase not available or disabled)');
+            loadLocal();
+        }
+
+        async function testSupabaseConnection() {
+            if (!supabaseClient) {
+                console.error('Supabase client not initialized');
+                return false;
+            }
+            try {
+                const { data, error } = await supabaseClient.from('participants').select('id').limit(1);
+                if (error) {
+                    console.error('Supabase connection test failed:', error);
+                    return false;
+                }
+                console.log('✓ Supabase connection test successful');
+                return true;
+            } catch (err) {
+                console.warn('Supabase connection test error:', err);
+                return false;
+            }
+        }
+
+        function openEditParticipant(id) {
+            const p = state.participants.find(x => x.id === id);
+            if (!p) {
+                showToast('Participant not found', 'error');
+                return;
+            }
+
+            // Populate Quick Add form
+            document.getElementById('qa_edit_id').value = id;
+            document.getElementById('qa_name').value = p.name || '';
+            document.getElementById('qa_team').value = p.team || 'Phoenix';
+            document.getElementById('qa_class').value = p.class || '';
+            document.getElementById('qa_gender').value = p.gender || '';
+            // Only populate chest number if participant has one, otherwise leave empty for refresh button
+            const chestInput = document.getElementById('qa_chest');
+            const refreshBtn = document.getElementById('qa_chest_refresh');
+            const chestNo = p.chest_no ? String(p.chest_no).trim() : '';
+
+            if (chestNo) {
+                // Participant has chest number - set it and hide refresh button
+                chestInput.value = chestNo;
+                if (refreshBtn) {
+                    refreshBtn.style.display = 'none';
+                }
+            } else {
+                // Participant has no chest number - leave empty and show refresh button
+                chestInput.value = '';
+                if (refreshBtn) {
+                    refreshBtn.style.display = 'inline-block';
+                }
+            }
+
+            // Select events in multiselect
+            const eventsSelect = document.getElementById('qa_events');
+            Array.from(eventsSelect.options).forEach(opt => {
+                opt.selected = (p.events || []).includes(opt.value);
+            });
+
+            // Update UI
+            document.getElementById('qa_title').textContent = 'Edit Participant';
+            document.getElementById('qa_add').textContent = 'Update Participant';
+            document.getElementById('qa_cancel').style.display = 'inline-block';
+
+            // Scroll to form
+            document.getElementById('qa_name').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('qa_name').focus();
+        }
+
+        function clearQuickAddForm() {
+            document.getElementById('qa_edit_id').value = '';
+            document.getElementById('qa_name').value = '';
+            document.getElementById('qa_team').value = 'Phoenix';
+            document.getElementById('qa_class').value = '';
+            document.getElementById('qa_gender').value = '';
+            document.getElementById('qa_chest').value = '';
+            const eventsSelect = document.getElementById('qa_events');
+            if (eventsSelect) eventsSelect.selectedIndex = -1;
+            document.getElementById('qa_title').textContent = 'Quick Add';
+            document.getElementById('qa_add').textContent = 'Add Participant';
+            document.getElementById('qa_cancel').style.display = 'none';
+            // Update refresh button visibility
+            if (typeof updateChestRefreshVisibility === 'function') {
+                updateChestRefreshVisibility();
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ==================== INITIALIZATION ====================
+        async function init() {
+            // Initialize Supabase first
+            if (CONFIG.USE_SUPABASE && !supabaseClient) {
+                initSupabase();
+            }
+
+            // Load user from storage (will prioritize Supabase session if available)
+            const userLoaded = await loadUserFromStorage();
+            if (userLoaded) {
+                console.log('User loaded:', state.user);
+            }
+
+            render();
+            afterRender();
+            if (supabaseClient && CONFIG.USE_SUPABASE) {
+                testSupabaseConnection().catch(() => { });
+            }
+            if (state.user) {
+                await loadData();
+                render();
+                afterRender();
+            }
+        }
+
+        // Start app when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
 </body>
-</html>
 
+</html>
